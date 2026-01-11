@@ -222,6 +222,46 @@
       color: var(--color-text-muted);
     }
 
+    /* ============ Import/Export ============ */
+    .data-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--color-border-light);
+    }
+
+    .data-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      background: transparent;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .data-btn:hover {
+      background: var(--color-bg-elevated);
+      border-color: var(--color-text);
+      color: var(--color-text);
+    }
+
+    .data-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .file-input-hidden {
+      display: none;
+    }
+
     /* ============ Modal ============ */
     .modal-overlay {
       position: fixed;
@@ -1384,6 +1424,9 @@
                 style="background: ${preset.gradient}">${preset.avatar}</button>
       `).join('');
 
+      const exportIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
+      const importIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>`;
+
       return `
         <div class="selector-container">
           <div class="selector-header">
@@ -1397,6 +1440,18 @@
               <div class="new-project-icon">+</div>
               <span class="new-project-text">New Project</span>
             </button>
+          </div>
+
+          <div class="data-actions">
+            <button class="data-btn" id="exportBtn">
+              ${exportIcon}
+              匯出 JSON
+            </button>
+            <label class="data-btn" for="importInput">
+              ${importIcon}
+              匯入 JSON
+            </label>
+            <input type="file" id="importInput" class="file-input-hidden" accept=".json">
           </div>
         </div>
 
@@ -1808,6 +1863,88 @@
       document.getElementById('createBtn').addEventListener('click', createProject);
       document.getElementById('projectNameInput').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') createProject();
+      });
+
+      // 匯出 JSON
+      document.getElementById('exportBtn').addEventListener('click', () => {
+        const data = {
+          version: '1.0',
+          exportedAt: new Date().toISOString(),
+          projects: state.projects,
+          posts: state.posts,
+          categories: state.categories,
+        };
+        
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `ideaflow-backup-${new Date().toISOString().slice(0, 10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+
+      // 匯入 JSON
+      document.getElementById('importInput').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const data = JSON.parse(event.target.result);
+            
+            // 驗證資料結構
+            if (!data.projects || !data.posts) {
+              throw new Error('無效的備份檔案格式');
+            }
+
+            // 確認是否覆蓋
+            const hasExisting = state.projects.length > 0 || state.posts.length > 0;
+            const action = hasExisting 
+              ? prompt('選擇匯入方式：\n1. merge（合併，保留現有資料）\n2. replace（取代，清除現有資料）\n\n輸入 merge 或 replace：')
+              : 'replace';
+
+            if (action === 'replace') {
+              state.projects = data.projects || [];
+              state.posts = data.posts || [];
+              state.categories = data.categories || [];
+            } else if (action === 'merge') {
+              // 合併，避免重複 ID
+              const existingProjectIds = new Set(state.projects.map(p => p.id));
+              const existingPostIds = new Set(state.posts.map(p => p.id));
+              const existingCategoryIds = new Set(state.categories.map(c => c.id));
+
+              data.projects.forEach(p => {
+                if (!existingProjectIds.has(p.id)) state.projects.push(p);
+              });
+              data.posts.forEach(p => {
+                if (!existingPostIds.has(p.id)) state.posts.push(p);
+              });
+              (data.categories || []).forEach(c => {
+                if (!existingCategoryIds.has(c.id)) state.categories.push(c);
+              });
+            } else {
+              return; // 取消
+            }
+
+            // 儲存到 localStorage
+            storage.setProjects(state.projects);
+            storage.setPosts(state.posts);
+            storage.setCategories(state.categories);
+
+            alert(`匯入成功！\n專案：${data.projects.length}\n想法：${data.posts.length}\n分類：${(data.categories || []).length}`);
+            render();
+          } catch (err) {
+            alert('匯入失敗：' + err.message);
+          }
+        };
+        reader.readAsText(file);
+        
+        // 重置 input 以便重複選擇同一檔案
+        e.target.value = '';
       });
     }
 
