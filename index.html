@@ -790,15 +790,6 @@
       box-shadow: 0 0 0 2px var(--accent, #667eea);
     }
 
-    .category-header {
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--color-border-light);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: grab;
-    }
-
     .category-color {
       width: 12px;
       height: 12px;
@@ -1126,6 +1117,39 @@
       z-index: 100;
     }
 
+    /* ============ Auto Link Styling ============ */
+    .post-content a,
+    .view-modal-content a,
+    .category-card-preview a,
+    .flow-node-preview a,
+    .no-title-card a {
+      color: var(--accent, #667eea);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color var(--transition);
+    }
+
+    .post-content a:hover,
+    .view-modal-content a:hover,
+    .category-card-preview a:hover,
+    .flow-node-preview a:hover,
+    .no-title-card a:hover {
+      border-bottom-color: var(--accent, #667eea);
+    }
+
+    /* Drawing line for flow mode connection */
+    #flowDrawingLine {
+      position: fixed;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    #flowDrawingLine line {
+      stroke: var(--accent, #667eea);
+      stroke-width: 2;
+      stroke-dasharray: 5, 5;
+    }
+
     @keyframes slideIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
@@ -1258,6 +1282,251 @@
       font-family: var(--font-mono);
     }
 
+    /* ============ Category Input Modal ============ */
+    .category-input-modal {
+      background: var(--color-bg-elevated);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: var(--shadow-lg);
+      animation: slideUp 0.3s ease-out;
+    }
+
+    .category-input-modal .modal-title {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+
+    .category-color-picker {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .category-color-option {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 3px solid transparent;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .category-color-option:hover {
+      transform: scale(1.1);
+    }
+
+    .category-color-option.selected {
+      border-color: var(--color-text);
+      transform: scale(1.1);
+    }
+
+    .category-color-label {
+      font-size: 0.85rem;
+      color: var(--color-text-secondary);
+      margin-bottom: 8px;
+    }
+
+    /* ============ Category Menu Dropdown ============ */
+    .category-menu-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-md);
+      min-width: 140px;
+      z-index: 50;
+      animation: fadeIn 0.15s ease-out;
+      overflow: hidden;
+    }
+
+    .category-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 10px 14px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.85rem;
+      color: var(--color-text);
+      text-align: left;
+      transition: background var(--transition);
+    }
+
+    .category-menu-item:hover {
+      background: var(--color-bg);
+    }
+
+    .category-menu-item--danger {
+      color: #e53e3e;
+    }
+
+    .category-menu-item--danger:hover {
+      background: #fff5f5;
+    }
+
+    .category-menu-item svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .category-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--color-border-light);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: grab;
+      position: relative;
+    }
+
+    /* ============ Confirm Modal ============ */
+    .confirm-modal {
+      background: var(--color-bg-elevated);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      width: 100%;
+      max-width: 340px;
+      box-shadow: var(--shadow-lg);
+      animation: slideUp 0.3s ease-out;
+      text-align: center;
+    }
+
+    .confirm-modal .modal-title {
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+    }
+
+    .confirm-modal-text {
+      font-size: 0.95rem;
+      color: var(--color-text-secondary);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .confirm-modal .modal-actions {
+      margin-top: 0;
+    }
+
+    .btn--danger {
+      background: #e53e3e;
+      color: white;
+    }
+
+    .btn--danger:hover {
+      background: #c53030;
+    }
+
+    /* ============ Import Modal ============ */
+    .import-modal {
+      background: var(--color-bg-elevated);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: var(--shadow-lg);
+      animation: slideUp 0.3s ease-out;
+    }
+
+    .import-modal .modal-title {
+      font-size: 1.4rem;
+      margin-bottom: 16px;
+    }
+
+    .import-modal-info {
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+      margin-bottom: 20px;
+      padding: 12px;
+      background: var(--color-bg);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+    }
+
+    .import-modal-text {
+      font-size: 0.95rem;
+      color: var(--color-text-secondary);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .import-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .import-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .import-option:hover {
+      border-color: var(--color-text);
+    }
+
+    .import-option.selected {
+      border-color: var(--color-text);
+      background: var(--color-bg);
+    }
+
+    .import-option input[type="radio"] {
+      display: none;
+    }
+
+    .import-option-radio {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--color-border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .import-option.selected .import-option-radio {
+      border-color: var(--color-text);
+    }
+
+    .import-option.selected .import-option-radio::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      background: var(--color-text);
+      border-radius: 50%;
+    }
+
+    .import-option-content {
+      flex: 1;
+    }
+
+    .import-option-title {
+      font-weight: 500;
+      font-size: 0.95rem;
+      margin-bottom: 2px;
+    }
+
+    .import-option-desc {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+    }
+
     /* ============ Empty State ============ */
     .empty-state {
       text-align: center;
@@ -1329,14 +1598,64 @@
       '#fa709a', '#a18cd1', '#66a6ff', '#ff9a9e'
     ];
 
+    // 自動備份到伺服器（防抖動，5秒內多次變更只觸發一次）
+    let backupTimeout = null;
+    let lastBackupTime = 0;
+    const BACKUP_DEBOUNCE = 5000; // 5 秒防抖
+    const BACKUP_MIN_INTERVAL = 60000; // 最少間隔 1 分鐘
+
+    async function autoBackup() {
+      const now = Date.now();
+      // 如果距離上次備份不到 1 分鐘，跳過
+      if (now - lastBackupTime < BACKUP_MIN_INTERVAL) return;
+
+      try {
+        const data = {
+          version: '1.0',
+          exportedAt: new Date().toISOString(),
+          projects: JSON.parse(localStorage.getItem('ideaflow_projects') || '[]'),
+          posts: JSON.parse(localStorage.getItem('ideaflow_posts') || '[]'),
+          categories: JSON.parse(localStorage.getItem('ideaflow_categories') || '[]')
+        };
+
+        const response = await fetch('/api/backup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+          lastBackupTime = now;
+          console.log('[AutoBackup] Saved successfully');
+        }
+      } catch (error) {
+        // 如果伺服器不支援備份 API，靜默忽略
+        console.log('[AutoBackup] Server backup not available');
+      }
+    }
+
+    function scheduleBackup() {
+      if (backupTimeout) clearTimeout(backupTimeout);
+      backupTimeout = setTimeout(autoBackup, BACKUP_DEBOUNCE);
+    }
+
     // 資料存取
     const storage = {
       getProjects: () => JSON.parse(localStorage.getItem('ideaflow_projects') || '[]'),
-      setProjects: (projects) => localStorage.setItem('ideaflow_projects', JSON.stringify(projects)),
+      setProjects: (projects) => {
+        localStorage.setItem('ideaflow_projects', JSON.stringify(projects));
+        scheduleBackup();
+      },
       getPosts: () => JSON.parse(localStorage.getItem('ideaflow_posts') || '[]'),
-      setPosts: (posts) => localStorage.setItem('ideaflow_posts', JSON.stringify(posts)),
+      setPosts: (posts) => {
+        localStorage.setItem('ideaflow_posts', JSON.stringify(posts));
+        scheduleBackup();
+      },
       getCategories: () => JSON.parse(localStorage.getItem('ideaflow_categories') || '[]'),
-      setCategories: (categories) => localStorage.setItem('ideaflow_categories', JSON.stringify(categories)),
+      setCategories: (categories) => {
+        localStorage.setItem('ideaflow_categories', JSON.stringify(categories));
+        scheduleBackup();
+      },
     };
 
     // 工具函數
@@ -1369,6 +1688,13 @@
       flowScale: 1,
       flowOffset: { x: 0, y: 0 },
       drawingConnection: null, // { fromId, startX, startY, currentX, currentY }
+      // 分類 modal 狀態
+      categoryModal: null, // null | { mode: 'add' | 'rename', categoryId?: string, name: string, color: string }
+      categoryMenuOpen: null, // 開啟中的分類選單 ID
+      deletingCategory: null, // 準備刪除的分類 ID
+      importModal: null, // null | { data: object } 匯入確認 modal
+      deletingPost: null, // 準備刪除的貼文 ID
+      deletingPostFromModal: false, // 是否從編輯 modal 刪除
     };
 
     // 解析標題 (第一行 # 開頭)
@@ -1383,6 +1709,43 @@
       }
 
       return { title, body };
+    }
+
+    // 將文字中的 URL 轉換為可點擊的超連結
+    function linkify(text) {
+      if (!text) return text;
+
+      // URL 正則表達式 - 匹配 http/https 開頭的連結
+      const urlPattern = /(\b(https?:\/\/)([-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|]))/gi;
+
+      // 將 URL 替換為 <a> 標籤，並對特殊字元進行 HTML 轉義（防止 XSS）
+      return text.replace(urlPattern, (match, url) => {
+        // 對 URL 進行基本的清理
+        const safeUrl = url.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        // 對顯示文字進行截斷（太長的 URL 只顯示前 50 字元）
+        const displayUrl = url.length > 50 ? url.substring(0, 50) + '...' : url;
+        return `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer">${displayUrl}</a>`;
+      });
+    }
+
+    // HTML 轉義（防止 XSS，但保留已處理的連結）
+    function escapeHtml(text) {
+      if (!text) return text;
+      return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // 安全地處理文字內容：先轉義 HTML，再轉換連結
+    function processContent(text) {
+      if (!text) return text;
+      // 先轉義 HTML 特殊字元
+      const escaped = escapeHtml(text);
+      // 再將 URL 轉換為超連結
+      return linkify(escaped);
     }
 
     // 初始化
@@ -1475,6 +1838,53 @@
             </div>
           </div>
         </div>
+
+        ${renderImportModal()}
+      `;
+    }
+
+    // 渲染匯入 modal
+    function renderImportModal() {
+      if (!state.importModal) return '';
+
+      const data = state.importModal.data;
+      const hasExisting = state.projects.length > 0 || state.posts.length > 0;
+      const selectedMode = state.importModal.mode || 'replace';
+
+      return `
+        <div class="modal-overlay" id="importModal">
+          <div class="import-modal">
+            <h2 class="modal-title">匯入資料</h2>
+            <div class="import-modal-info">
+              專案：${data.projects?.length || 0} 個<br>
+              想法：${data.posts?.length || 0} 則<br>
+              分類：${(data.categories || []).length} 個
+            </div>
+            ${hasExisting ? `
+              <p class="import-modal-text">偵測到現有資料，請選擇匯入方式：</p>
+              <div class="import-options">
+                <label class="import-option ${selectedMode === 'merge' ? 'selected' : ''}" data-mode="merge">
+                  <div class="import-option-radio"></div>
+                  <div class="import-option-content">
+                    <div class="import-option-title">合併</div>
+                    <div class="import-option-desc">保留現有資料，新增不重複的項目</div>
+                  </div>
+                </label>
+                <label class="import-option ${selectedMode === 'replace' ? 'selected' : ''}" data-mode="replace">
+                  <div class="import-option-radio"></div>
+                  <div class="import-option-content">
+                    <div class="import-option-title">取代</div>
+                    <div class="import-option-desc">清除現有資料，完全使用備份檔案</div>
+                  </div>
+                </label>
+              </div>
+            ` : ''}
+            <div class="modal-actions">
+              <button class="btn btn--ghost" id="cancelImportBtn">取消</button>
+              <button class="btn btn--primary" id="confirmImportBtn">匯入</button>
+            </div>
+          </div>
+        </div>
       `;
     }
 
@@ -1520,8 +1930,8 @@
         viewModal = `
           <div class="modal-overlay" id="viewModal">
             <div class="view-modal">
-              ${title ? `<h2 class="view-modal-title"># ${title}</h2>` : ''}
-              <div class="view-modal-content">${body || state.viewingPost.contentText}</div>
+              ${title ? `<h2 class="view-modal-title"># ${escapeHtml(title)}</h2>` : ''}
+              <div class="view-modal-content">${processContent(body || state.viewingPost.contentText)}</div>
               <div class="view-modal-meta">
                 <div class="view-modal-avatar" style="background: ${project.preset.gradient}">${project.preset.avatar}</div>
                 <span class="view-modal-time">${formatTime(state.viewingPost.createdAt)}</span>
@@ -1590,6 +2000,25 @@
         </div>
         ${editModal}
         ${viewModal}
+        ${renderDeletePostModal()}
+      `;
+    }
+
+    // 渲染刪除貼文確認 modal
+    function renderDeletePostModal() {
+      if (!state.deletingPost) return '';
+
+      return `
+        <div class="modal-overlay" id="deletePostModal">
+          <div class="confirm-modal">
+            <h2 class="modal-title">刪除想法</h2>
+            <p class="confirm-modal-text">確定要刪除這則想法嗎？<br>此操作無法復原。</p>
+            <div class="modal-actions">
+              <button class="btn btn--ghost" id="cancelDeletePostBtn">取消</button>
+              <button class="btn btn--danger" id="confirmDeletePostBtn">刪除</button>
+            </div>
+          </div>
+        </div>
       `;
     }
 
@@ -1613,7 +2042,7 @@
         const { title, body } = parsePost(post.contentText);
         return `
           <article class="post-card" data-post-id="${post.id}">
-            ${title ? `<div class="post-title"># ${title}</div>` : ''}
+            ${title ? `<div class="post-title"># ${escapeHtml(title)}</div>` : ''}
             <div class="post-header">
               <div class="post-avatar" style="background: ${project.preset.gradient}">${project.preset.avatar}</div>
               <div class="post-meta">
@@ -1621,7 +2050,7 @@
                 <span class="post-time">${formatTime(post.createdAt)}</span>
               </div>
             </div>
-            <div class="post-content">${body || post.contentText}</div>
+            <div class="post-content">${processContent(body || post.contentText)}</div>
             <div class="post-actions">
               <button class="post-action-btn post-action-btn--copy" data-action="copy" data-id="${post.id}">copy</button>
               <button class="post-action-btn" data-action="edit" data-id="${post.id}">edit</button>
@@ -1659,9 +2088,9 @@
               <button class="post-action-btn" data-action="edit" data-id="${post.id}">edit</button>
               <button class="post-action-btn post-action-btn--danger" data-action="delete" data-id="${post.id}">del</button>
             </div>
-            ${title 
-              ? `<div class="post-title"># ${title}</div>` 
-              : `<div class="no-title-card">${post.contentText}</div>`
+            ${title
+              ? `<div class="post-title"># ${escapeHtml(title)}</div>`
+              : `<div class="no-title-card">${processContent(post.contentText)}</div>`
             }
             <div class="post-card-footer">
               <div class="post-card-avatar" style="background: ${project.preset.gradient}">${project.preset.avatar}</div>
@@ -1678,7 +2107,28 @@
     function renderCategoryMode(project, posts, categories) {
       // 未分類的貼文
       const uncategorized = posts.filter(p => !p.categoryId);
-      
+
+      // 渲染分類選單下拉
+      const renderCategoryMenu = (categoryId) => {
+        if (state.categoryMenuOpen !== categoryId) return '';
+        return `
+          <div class="category-menu-dropdown">
+            <button class="category-menu-item" data-category-id="${categoryId}" data-menu-action="rename">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+              </svg>
+              重新命名
+            </button>
+            <button class="category-menu-item category-menu-item--danger" data-category-id="${categoryId}" data-menu-action="delete">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+              </svg>
+              刪除分類
+            </button>
+          </div>
+        `;
+      };
+
       // 分類欄位
       const categoryColumns = categories
         .sort((a, b) => (a.order || 0) - (b.order || 0))
@@ -1686,7 +2136,7 @@
           const catPosts = posts
             .filter(p => p.categoryId === cat.id)
             .sort((a, b) => (a.categoryOrder || 0) - (b.categoryOrder || 0));
-          
+
           return `
             <div class="category-column" data-category-id="${cat.id}">
               <div class="category-header">
@@ -1698,6 +2148,7 @@
                     <circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/>
                   </svg>
                 </button>
+                ${renderCategoryMenu(cat.id)}
               </div>
               <div class="category-cards" data-category-id="${cat.id}">
                 ${catPosts.map(post => renderCategoryCard(post)).join('')}
@@ -1720,6 +2171,56 @@
         </div>
       `;
 
+      // 分類 modal
+      let categoryModalHtml = '';
+      if (state.categoryModal) {
+        const isAdd = state.categoryModal.mode === 'add';
+        const colorOptions = CATEGORY_COLORS.map(color => `
+          <button type="button" class="category-color-option ${state.categoryModal.color === color ? 'selected' : ''}"
+                  data-color="${color}"
+                  style="background: ${color}"></button>
+        `).join('');
+
+        categoryModalHtml = `
+          <div class="modal-overlay" id="categoryModal">
+            <div class="category-input-modal">
+              <h2 class="modal-title">${isAdd ? '新增分類' : '重新命名分類'}</h2>
+              <input type="text" class="modal-input" id="categoryNameInput"
+                     placeholder="分類名稱..."
+                     value="${state.categoryModal.name || ''}"
+                     autofocus>
+              <div style="margin-top: 16px;">
+                <p class="category-color-label">選擇顏色</p>
+                <div class="category-color-picker">
+                  ${colorOptions}
+                </div>
+              </div>
+              <div class="modal-actions">
+                <button class="btn btn--ghost" id="cancelCategoryBtn">取消</button>
+                <button class="btn btn--primary" id="saveCategoryBtn">${isAdd ? '建立' : '儲存'}</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // 刪除確認 modal
+      let deleteConfirmHtml = '';
+      if (state.deletingCategory) {
+        deleteConfirmHtml = `
+          <div class="modal-overlay" id="deleteConfirmModal">
+            <div class="confirm-modal">
+              <h2 class="modal-title">刪除分類</h2>
+              <p class="confirm-modal-text">確定要刪除此分類嗎？<br>卡片會移到「未分類」</p>
+              <div class="modal-actions">
+                <button class="btn btn--ghost" id="cancelDeleteBtn">取消</button>
+                <button class="btn btn--danger" id="confirmDeleteBtn">刪除</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
       return `
         <div class="category-container">
           ${uncategorizedColumn}
@@ -1731,6 +2232,8 @@
             新增分類
           </button>
         </div>
+        ${categoryModalHtml}
+        ${deleteConfirmHtml}
       `;
     }
 
@@ -1744,8 +2247,8 @@
             <button class="post-action-btn" data-action="edit" data-id="${post.id}" style="padding: 2px 6px; font-size: 0.7rem;">edit</button>
             <button class="post-action-btn post-action-btn--danger" data-action="delete" data-id="${post.id}" style="padding: 2px 6px; font-size: 0.7rem;">del</button>
           </div>
-          ${title ? `<div class="category-card-title"># ${title}</div>` : ''}
-          <div class="category-card-preview">${body || post.contentText}</div>
+          ${title ? `<div class="category-card-title"># ${escapeHtml(title)}</div>` : ''}
+          <div class="category-card-preview">${processContent(body || post.contentText)}</div>
         </div>
       `;
     }
@@ -1762,8 +2265,8 @@
         return `
           <div class="flow-node" data-post-id="${post.id}" style="left: ${post.flowX}px; top: ${post.flowY}px;">
             <div class="flow-node-connector in" data-post-id="${post.id}" data-type="in"></div>
-            ${title ? `<div class="flow-node-title"># ${title}</div>` : ''}
-            <div class="flow-node-preview">${body || post.contentText}</div>
+            ${title ? `<div class="flow-node-title"># ${escapeHtml(title)}</div>` : ''}
+            <div class="flow-node-preview">${processContent(body || post.contentText)}</div>
             <div class="flow-node-connector out" data-post-id="${post.id}" data-type="out"></div>
           </div>
         `;
@@ -1792,7 +2295,7 @@
         const { title } = parsePost(post.contentText);
         return `
           <div class="flow-unassigned-card" draggable="true" data-post-id="${post.id}">
-            <div class="category-card-title">${title ? `# ${title}` : '(無標題)'}</div>
+            <div class="category-card-title">${title ? `# ${escapeHtml(title)}` : '(無標題)'}</div>
           </div>
         `;
       }).join('');
@@ -1896,7 +2399,7 @@
         URL.revokeObjectURL(url);
       });
 
-      // 匯入 JSON
+      // 匯入 JSON - 選擇檔案後顯示 modal
       document.getElementById('importInput').addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -1905,56 +2408,127 @@
         reader.onload = (event) => {
           try {
             const data = JSON.parse(event.target.result);
-            
+
             // 驗證資料結構
             if (!data.projects || !data.posts) {
-              throw new Error('無效的備份檔案格式');
+              showToast('無效的備份檔案格式', 'error');
+              return;
             }
 
-            // 確認是否覆蓋
+            // 顯示匯入 modal
             const hasExisting = state.projects.length > 0 || state.posts.length > 0;
-            const action = hasExisting 
-              ? prompt('選擇匯入方式：\n1. merge（合併，保留現有資料）\n2. replace（取代，清除現有資料）\n\n輸入 merge 或 replace：')
-              : 'replace';
-
-            if (action === 'replace') {
-              state.projects = data.projects || [];
-              state.posts = data.posts || [];
-              state.categories = data.categories || [];
-            } else if (action === 'merge') {
-              // 合併，避免重複 ID
-              const existingProjectIds = new Set(state.projects.map(p => p.id));
-              const existingPostIds = new Set(state.posts.map(p => p.id));
-              const existingCategoryIds = new Set(state.categories.map(c => c.id));
-
-              data.projects.forEach(p => {
-                if (!existingProjectIds.has(p.id)) state.projects.push(p);
-              });
-              data.posts.forEach(p => {
-                if (!existingPostIds.has(p.id)) state.posts.push(p);
-              });
-              (data.categories || []).forEach(c => {
-                if (!existingCategoryIds.has(c.id)) state.categories.push(c);
-              });
-            } else {
-              return; // 取消
-            }
-
-            // 儲存到 localStorage
-            storage.setProjects(state.projects);
-            storage.setPosts(state.posts);
-            storage.setCategories(state.categories);
-
-            alert(`匯入成功！\n專案：${data.projects.length}\n想法：${data.posts.length}\n分類：${(data.categories || []).length}`);
+            state.importModal = {
+              data: data,
+              mode: hasExisting ? 'merge' : 'replace'
+            };
             render();
           } catch (err) {
-            alert('匯入失敗：' + err.message);
+            showToast('匯入失敗：' + err.message, 'error');
           }
         };
         reader.readAsText(file);
-        
+
         // 重置 input 以便重複選擇同一檔案
         e.target.value = '';
+      });
+
+      // 綁定匯入 modal 事件
+      bindImportModalEvents();
+    }
+
+    // 顯示 toast 訊息
+    function showToast(message, type = 'success') {
+      // 移除現有 toast
+      const existingToast = document.querySelector('.toast');
+      if (existingToast) existingToast.remove();
+
+      const toast = document.createElement('div');
+      toast.className = `toast toast--${type}`;
+      toast.textContent = message;
+      toast.style.cssText = `
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: ${type === 'error' ? '#e53e3e' : '#1a1a1a'};
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 1000;
+        animation: slideUp 0.3s ease-out;
+      `;
+      document.body.appendChild(toast);
+
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // 綁定匯入 modal 事件
+    function bindImportModalEvents() {
+      const importModal = document.getElementById('importModal');
+      if (!importModal) return;
+
+      // 選項切換
+      document.querySelectorAll('.import-option').forEach(option => {
+        option.addEventListener('click', () => {
+          if (state.importModal) {
+            state.importModal.mode = option.dataset.mode;
+            render();
+          }
+        });
+      });
+
+      // 取消按鈕
+      document.getElementById('cancelImportBtn')?.addEventListener('click', () => {
+        state.importModal = null;
+        render();
+      });
+
+      // 確認匯入按鈕
+      document.getElementById('confirmImportBtn')?.addEventListener('click', () => {
+        if (!state.importModal) return;
+
+        const data = state.importModal.data;
+        const action = state.importModal.mode || 'replace';
+
+        if (action === 'replace') {
+          state.projects = data.projects || [];
+          state.posts = data.posts || [];
+          state.categories = data.categories || [];
+        } else if (action === 'merge') {
+          // 合併，避免重複 ID
+          const existingProjectIds = new Set(state.projects.map(p => p.id));
+          const existingPostIds = new Set(state.posts.map(p => p.id));
+          const existingCategoryIds = new Set(state.categories.map(c => c.id));
+
+          data.projects.forEach(p => {
+            if (!existingProjectIds.has(p.id)) state.projects.push(p);
+          });
+          data.posts.forEach(p => {
+            if (!existingPostIds.has(p.id)) state.posts.push(p);
+          });
+          (data.categories || []).forEach(c => {
+            if (!existingCategoryIds.has(c.id)) state.categories.push(c);
+          });
+        }
+
+        // 儲存到 localStorage
+        storage.setProjects(state.projects);
+        storage.setPosts(state.posts);
+        storage.setCategories(state.categories);
+
+        state.importModal = null;
+        render();
+        showToast(`匯入成功！共 ${data.projects.length} 個專案、${data.posts.length} 則想法`);
+      });
+
+      // 點擊 overlay 關閉
+      importModal.addEventListener('click', (e) => {
+        if (e.target.id === 'importModal') {
+          state.importModal = null;
+          render();
+        }
       });
     }
 
@@ -2108,7 +2682,7 @@
         column.addEventListener('drop', (e) => {
           e.preventDefault();
           const categoryId = column.dataset.categoryId;
-          
+
           if (draggedPostId) {
             const postIndex = state.posts.findIndex(p => p.id === draggedPostId);
             if (postIndex !== -1) {
@@ -2129,54 +2703,177 @@
         });
       });
 
-      // 新增分類
+      // 新增分類按鈕 - 打開 modal
       document.getElementById('addCategoryBtn')?.addEventListener('click', () => {
-        const name = prompt('輸入分類名稱：');
-        if (name && name.trim()) {
-          const newCategory = {
-            id: generateId(),
-            projectId: state.currentProject.id,
-            name: name.trim(),
-            color: CATEGORY_COLORS[state.categories.length % CATEGORY_COLORS.length],
-            order: state.categories.length,
-          };
-          state.categories.push(newCategory);
-          storage.setCategories(state.categories);
-          render();
-        }
+        state.categoryModal = {
+          mode: 'add',
+          name: '',
+          color: CATEGORY_COLORS[state.categories.length % CATEGORY_COLORS.length]
+        };
+        state.categoryMenuOpen = null;
+        render();
       });
 
-      // 分類選單按鈕
+      // 分類選單按鈕 - 切換下拉選單
       document.querySelectorAll('.category-menu-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
           const categoryId = btn.dataset.categoryId;
-          const action = prompt('輸入操作：rename（重命名）、delete（刪除）');
-          
+          state.categoryMenuOpen = state.categoryMenuOpen === categoryId ? null : categoryId;
+          render();
+        });
+      });
+
+      // 點擊頁面其他地方關閉選單
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.category-menu-btn') && !e.target.closest('.category-menu-dropdown')) {
+          if (state.categoryMenuOpen) {
+            state.categoryMenuOpen = null;
+            render();
+          }
+        }
+      });
+
+      // 下拉選單項目
+      document.querySelectorAll('.category-menu-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const categoryId = item.dataset.categoryId;
+          const action = item.dataset.menuAction;
+
           if (action === 'rename') {
-            const newName = prompt('新名稱：');
-            if (newName && newName.trim()) {
-              const catIndex = state.categories.findIndex(c => c.id === categoryId);
-              if (catIndex !== -1) {
-                state.categories[catIndex].name = newName.trim();
-                storage.setCategories(state.categories);
-                render();
-              }
-            }
-          } else if (action === 'delete') {
-            if (confirm('確定刪除此分類？卡片會移到未分類')) {
-              // 把該分類的卡片移到未分類
-              state.posts.forEach(p => {
-                if (p.categoryId === categoryId) p.categoryId = null;
-              });
-              storage.setPosts(state.posts);
-              
-              state.categories = state.categories.filter(c => c.id !== categoryId);
-              storage.setCategories(state.categories);
+            const category = state.categories.find(c => c.id === categoryId);
+            if (category) {
+              state.categoryModal = {
+                mode: 'rename',
+                categoryId: categoryId,
+                name: category.name,
+                color: category.color
+              };
+              state.categoryMenuOpen = null;
               render();
             }
+          } else if (action === 'delete') {
+            state.deletingCategory = categoryId;
+            state.categoryMenuOpen = null;
+            render();
           }
         });
+      });
+
+      // 分類 modal 事件
+      bindCategoryModalEvents();
+
+      // 刪除確認 modal 事件
+      bindDeleteConfirmEvents();
+    }
+
+    // 綁定分類 modal 事件
+    function bindCategoryModalEvents() {
+      const categoryModal = document.getElementById('categoryModal');
+      if (!categoryModal) return;
+
+      const nameInput = document.getElementById('categoryNameInput');
+
+      // 自動 focus 輸入框
+      setTimeout(() => nameInput?.focus(), 100);
+
+      // 顏色選擇
+      document.querySelectorAll('.category-color-option').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (state.categoryModal) {
+            state.categoryModal.color = btn.dataset.color;
+            render();
+          }
+        });
+      });
+
+      // 取消按鈕
+      document.getElementById('cancelCategoryBtn')?.addEventListener('click', () => {
+        state.categoryModal = null;
+        render();
+      });
+
+      // 儲存/建立按鈕
+      document.getElementById('saveCategoryBtn')?.addEventListener('click', () => {
+        const name = nameInput?.value.trim();
+        if (!name || !state.categoryModal) return;
+
+        if (state.categoryModal.mode === 'add') {
+          const newCategory = {
+            id: generateId(),
+            projectId: state.currentProject.id,
+            name: name,
+            color: state.categoryModal.color,
+            order: state.categories.length,
+          };
+          state.categories.push(newCategory);
+          storage.setCategories(state.categories);
+        } else if (state.categoryModal.mode === 'rename') {
+          const catIndex = state.categories.findIndex(c => c.id === state.categoryModal.categoryId);
+          if (catIndex !== -1) {
+            state.categories[catIndex].name = name;
+            state.categories[catIndex].color = state.categoryModal.color;
+            storage.setCategories(state.categories);
+          }
+        }
+
+        state.categoryModal = null;
+        render();
+      });
+
+      // 點擊 overlay 關閉
+      categoryModal.addEventListener('click', (e) => {
+        if (e.target.id === 'categoryModal') {
+          state.categoryModal = null;
+          render();
+        }
+      });
+
+      // Enter 鍵提交
+      nameInput?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          document.getElementById('saveCategoryBtn')?.click();
+        } else if (e.key === 'Escape') {
+          state.categoryModal = null;
+          render();
+        }
+      });
+    }
+
+    // 綁定刪除確認 modal 事件
+    function bindDeleteConfirmEvents() {
+      const deleteModal = document.getElementById('deleteConfirmModal');
+      if (!deleteModal) return;
+
+      // 取消按鈕
+      document.getElementById('cancelDeleteBtn')?.addEventListener('click', () => {
+        state.deletingCategory = null;
+        render();
+      });
+
+      // 確認刪除按鈕
+      document.getElementById('confirmDeleteBtn')?.addEventListener('click', () => {
+        if (state.deletingCategory) {
+          // 把該分類的卡片移到未分類
+          state.posts.forEach(p => {
+            if (p.categoryId === state.deletingCategory) p.categoryId = null;
+          });
+          storage.setPosts(state.posts);
+
+          state.categories = state.categories.filter(c => c.id !== state.deletingCategory);
+          storage.setCategories(state.categories);
+          state.deletingCategory = null;
+          render();
+        }
+      });
+
+      // 點擊 overlay 關閉
+      deleteModal.addEventListener('click', (e) => {
+        if (e.target.id === 'deleteConfirmModal') {
+          state.deletingCategory = null;
+          render();
+        }
       });
     }
 
@@ -2191,6 +2888,42 @@
       let dragOffset = { x: 0, y: 0 };
       let isDrawingLine = false;
       let lineStartId = null;
+      let lineStartPos = { x: 0, y: 0 };
+      let drawingLineSvg = null;
+
+      // 創建/移除繪製中的連線 SVG
+      function createDrawingLine() {
+        if (drawingLineSvg) return;
+        drawingLineSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        drawingLineSvg.id = 'flowDrawingLine';
+        drawingLineSvg.style.position = 'fixed';
+        drawingLineSvg.style.top = '0';
+        drawingLineSvg.style.left = '0';
+        drawingLineSvg.style.width = '100%';
+        drawingLineSvg.style.height = '100%';
+        drawingLineSvg.style.pointerEvents = 'none';
+        drawingLineSvg.style.zIndex = '1000';
+        drawingLineSvg.innerHTML = '<line x1="0" y1="0" x2="0" y2="0" stroke="var(--accent, #667eea)" stroke-width="2" stroke-dasharray="5,5"/>';
+        document.body.appendChild(drawingLineSvg);
+      }
+
+      function updateDrawingLine(x1, y1, x2, y2) {
+        if (!drawingLineSvg) return;
+        const line = drawingLineSvg.querySelector('line');
+        if (line) {
+          line.setAttribute('x1', x1);
+          line.setAttribute('y1', y1);
+          line.setAttribute('x2', x2);
+          line.setAttribute('y2', y2);
+        }
+      }
+
+      function removeDrawingLine() {
+        if (drawingLineSvg) {
+          drawingLineSvg.remove();
+          drawingLineSvg = null;
+        }
+      }
 
       // 縮放控制
       document.getElementById('flowZoomIn')?.addEventListener('click', () => {
@@ -2237,8 +2970,18 @@
       document.querySelectorAll('.flow-node-connector.out').forEach(connector => {
         connector.addEventListener('mousedown', (e) => {
           e.stopPropagation();
+          e.preventDefault();
           isDrawingLine = true;
           lineStartId = connector.dataset.postId;
+
+          // 記錄起始位置並創建繪製線
+          const rect = connector.getBoundingClientRect();
+          lineStartPos = {
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2
+          };
+          createDrawingLine();
+          updateDrawingLine(lineStartPos.x, lineStartPos.y, e.clientX, e.clientY);
         });
       });
 
@@ -2254,11 +2997,14 @@
                 if (!fromPost.flowConnections.includes(toId)) {
                   fromPost.flowConnections.push(toId);
                   storage.setPosts(state.posts);
+                  removeDrawingLine();
                   render();
+                  return;
                 }
               }
             }
           }
+          removeDrawingLine();
           isDrawingLine = false;
           lineStartId = null;
         });
@@ -2266,16 +3012,22 @@
 
       // 全域滑鼠移動和放開
       document.addEventListener('mousemove', (e) => {
+        // 更新繪製中的連線
+        if (isDrawingLine && lineStartId) {
+          updateDrawingLine(lineStartPos.x, lineStartPos.y, e.clientX, e.clientY);
+        }
+
+        // 節點拖曳
         if (isDraggingNode && draggedNodeId) {
           const canvasRect = flowCanvas.getBoundingClientRect();
           const x = (e.clientX - canvasRect.left) / state.flowScale - dragOffset.x;
           const y = (e.clientY - canvasRect.top) / state.flowScale - dragOffset.y;
-          
+
           const postIndex = state.posts.findIndex(p => p.id === draggedNodeId);
           if (postIndex !== -1) {
             state.posts[postIndex].flowX = Math.max(0, x);
             state.posts[postIndex].flowY = Math.max(0, y);
-            
+
             // 即時更新位置
             const nodeEl = document.querySelector(`.flow-node[data-post-id="${draggedNodeId}"]`);
             if (nodeEl) {
@@ -2292,6 +3044,8 @@
           document.querySelectorAll('.flow-node').forEach(n => n.classList.remove('dragging'));
           render(); // 重繪連線
         }
+        // 清除繪製中的連線
+        removeDrawingLine();
         isDraggingNode = false;
         draggedNodeId = null;
         isDrawingLine = false;
@@ -2387,12 +3141,9 @@
         });
 
         document.getElementById('deleteInModalBtn')?.addEventListener('click', () => {
-          if (confirm('確定要刪除這則想法嗎？')) {
-            state.posts = state.posts.filter(p => p.id !== state.editingPost.id);
-            storage.setPosts(state.posts);
-            state.editingPost = null;
-            render();
-          }
+          state.deletingPost = state.editingPost.id;
+          state.deletingPostFromModal = true;
+          render();
         });
 
         document.getElementById('saveEditBtn')?.addEventListener('click', () => {
@@ -2425,16 +3176,56 @@
         editTextarea?.focus();
         editTextarea?.setSelectionRange(editTextarea.value.length, editTextarea.value.length);
       }
+
+      // 刪除貼文確認 modal 事件
+      bindDeletePostModalEvents();
+    }
+
+    // 綁定刪除貼文 modal 事件
+    function bindDeletePostModalEvents() {
+      const deletePostModal = document.getElementById('deletePostModal');
+      if (!deletePostModal) return;
+
+      // 取消按鈕
+      document.getElementById('cancelDeletePostBtn')?.addEventListener('click', () => {
+        state.deletingPost = null;
+        state.deletingPostFromModal = false;
+        render();
+      });
+
+      // 確認刪除按鈕
+      document.getElementById('confirmDeletePostBtn')?.addEventListener('click', () => {
+        if (state.deletingPost) {
+          state.posts = state.posts.filter(p => p.id !== state.deletingPost);
+          storage.setPosts(state.posts);
+
+          // 如果是從編輯 modal 刪除，也要關閉編輯 modal
+          if (state.deletingPostFromModal) {
+            state.editingPost = null;
+          }
+
+          state.deletingPost = null;
+          state.deletingPostFromModal = false;
+          render();
+        }
+      });
+
+      // 點擊 overlay 關閉
+      deletePostModal.addEventListener('click', (e) => {
+        if (e.target.id === 'deletePostModal') {
+          state.deletingPost = null;
+          state.deletingPostFromModal = false;
+          render();
+        }
+      });
     }
 
     // 處理貼文操作
     function handlePostAction(action, id, btnElement) {
       if (action === 'delete') {
-        if (confirm('確定要刪除這則想法嗎？')) {
-          state.posts = state.posts.filter(p => p.id !== id);
-          storage.setPosts(state.posts);
-          render();
-        }
+        state.deletingPost = id;
+        state.deletingPostFromModal = false;
+        render();
       } else if (action === 'edit') {
         state.editingPost = state.posts.find(p => p.id === id);
         render();
