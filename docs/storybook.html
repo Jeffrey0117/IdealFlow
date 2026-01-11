@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Idea Flow - 組件文檔 (Storybook)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Noto+Sans+TC:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --font-display: 'Instrument Serif', serif;
+      --font-body: 'Noto Sans TC', sans-serif;
+      --font-mono: 'Space Mono', monospace;
+
+      --color-bg: #faf9f7;
+      --color-bg-elevated: #ffffff;
+      --color-sidebar: #1a1a1a;
+      --color-text: #1a1a1a;
+      --color-text-secondary: #666666;
+      --color-text-muted: #999999;
+      --color-border: #e8e6e3;
+      --color-border-light: #f0eeeb;
+      --color-accent: #667eea;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.1);
+
+      --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Layout */
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background: var(--color-sidebar);
+      color: white;
+      padding: 24px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      overflow-y: auto;
+    }
+
+    .sidebar-logo {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+
+    .sidebar-subtitle {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 32px;
+    }
+
+    .sidebar-nav {
+      list-style: none;
+    }
+
+    .sidebar-section {
+      margin-bottom: 24px;
+    }
+
+    .sidebar-section-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 12px;
+    }
+
+    .sidebar-link {
+      display: block;
+      padding: 10px 16px;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      transition: all var(--transition);
+      margin-bottom: 4px;
+    }
+
+    .sidebar-link:hover {
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+
+    .sidebar-link.active {
+      background: var(--color-accent);
+      color: white;
+    }
+
+    .sidebar-back {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      font-size: 0.85rem;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .sidebar-back:hover {
+      color: white;
+    }
+
+    /* Main Content */
+    .main {
+      flex: 1;
+      margin-left: 280px;
+      padding: 48px;
+    }
+
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 400;
+      margin-bottom: 16px;
+    }
+
+    .section-desc {
+      color: var(--color-text-secondary);
+      font-size: 1.1rem;
+      margin-bottom: 40px;
+      max-width: 700px;
+    }
+
+    /* Component Demo */
+    .component {
+      margin-bottom: 48px;
+    }
+
+    .component-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .component-desc {
+      color: var(--color-text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .demo-box {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 16px;
+    }
+
+    .demo-box-dark {
+      background: #2a2a2a;
+    }
+
+    .demo-row {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .code-block {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 20px;
+      border-radius: var(--radius-md);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+
+    .code-block .tag { color: #569cd6; }
+    .code-block .attr { color: #9cdcfe; }
+    .code-block .string { color: #ce9178; }
+    .code-block .comment { color: #6a9955; }
+
+    /* ========== Component Styles ========== */
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all var(--transition);
+      border: none;
+      text-decoration: none;
+    }
+
+    .btn--primary {
+      background: var(--color-text);
+      color: var(--color-bg-elevated);
+    }
+
+    .btn--primary:hover {
+      opacity: 0.85;
+    }
+
+    .btn--primary:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .btn--ghost {
+      background: transparent;
+      border: 1px solid var(--color-border);
+      color: var(--color-text-secondary);
+    }
+
+    .btn--ghost:hover {
+      background: var(--color-bg);
+      border-color: var(--color-text);
+      color: var(--color-text);
+    }
+
+    .btn--danger {
+      background: transparent;
+      border: 1px solid #fed7d7;
+      color: #e53e3e;
+    }
+
+    .btn--danger:hover {
+      background: #fff5f5;
+      border-color: #e53e3e;
+    }
+
+    .btn--sm {
+      padding: 8px 16px;
+      font-size: 0.85rem;
+    }
+
+    .btn--icon {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border-radius: var(--radius-full);
+    }
+
+    /* Action Button */
+    .post-action-btn {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      font-family: var(--font-mono);
+      background: transparent;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--color-text-muted);
+      transition: all var(--transition);
+    }
+
+    .post-action-btn:hover {
+      background: var(--color-bg);
+      border-color: var(--color-text);
+      color: var(--color-text);
+    }
+
+    .post-action-btn--danger:hover {
+      background: #fff5f5;
+      border-color: #e53e3e;
+      color: #e53e3e;
+    }
+
+    .post-action-btn--copy.copied {
+      background: #c6f6d5;
+      border-color: #38a169;
+      color: #38a169;
+    }
+
+    /* Cards */
+    .project-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition);
+      text-align: left;
+      width: 100%;
+      font-family: inherit;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--accent, #667eea);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .project-card:hover {
+      border-color: var(--accent, #667eea);
+      box-shadow: var(--shadow-md);
+      transform: translateX(4px);
+    }
+
+    .project-card:hover::before {
+      opacity: 1;
+    }
+
+    .project-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .project-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .project-name {
+      display: block;
+      font-weight: 500;
+      font-size: 1rem;
+      color: var(--color-text);
+      margin-bottom: 2px;
+    }
+
+    .project-meta {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      font-family: var(--font-mono);
+    }
+
+    .project-count {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      background: var(--color-bg);
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+    }
+
+    /* Post Card */
+    .post-card-demo {
+      padding: 24px 20px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--color-bg-elevated);
+      position: relative;
+    }
+
+    .post-title {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--color-text);
+      background: var(--color-bg);
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+    }
+
+    .post-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .post-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .post-meta {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .post-author {
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .post-time {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      font-family: var(--font-mono);
+    }
+
+    .post-content {
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    .post-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    /* Grid Card */
+    .grid-card-demo {
+      aspect-ratio: 1;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--color-bg-elevated);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+
+    .grid-card-demo:hover {
+      border-color: var(--color-accent);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .grid-card-title {
+      padding: 20px;
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 500;
+      line-height: 1.35;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+    }
+
+    .grid-card-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--color-border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .grid-card-avatar {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+    }
+
+    .grid-card-time {
+      font-size: 0.7rem;
+      color: var(--color-text-muted);
+      font-family: var(--font-mono);
+    }
+
+    /* Category Card */
+    .category-card {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      cursor: grab;
+      transition: all var(--transition);
+    }
+
+    .category-card:hover {
+      border-color: var(--color-border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .category-card-title {
+      font-weight: 500;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    .category-card-preview {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+    }
+
+    /* Modal */
+    .modal-demo {
+      background: var(--color-bg-elevated);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color var(--transition);
+      background: var(--color-bg);
+    }
+
+    .modal-input:focus {
+      outline: none;
+      border-color: var(--color-text);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .modal-actions .btn {
+      flex: 1;
+    }
+
+    /* Preset Selector */
+    .preset-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .preset-btn {
+      aspect-ratio: 1;
+      border: 3px solid transparent;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition);
+    }
+
+    .preset-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .preset-btn--selected {
+      border-color: var(--color-text);
+      transform: scale(1.1);
+    }
+
+    /* View Toggle */
+    .view-toggle {
+      display: inline-flex;
+      gap: 4px;
+      background: var(--color-bg);
+      padding: 4px;
+      border-radius: var(--radius-sm);
+    }
+
+    .view-toggle-btn {
+      padding: 6px 10px;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--color-text-muted);
+      transition: all var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .view-toggle-btn:hover {
+      color: var(--color-text);
+    }
+
+    .view-toggle-btn.active {
+      background: var(--color-bg-elevated);
+      color: var(--color-text);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Category Column */
+    .category-column-demo {
+      width: 260px;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+    }
+
+    .category-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--color-border-light);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .category-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 4px;
+    }
+
+    .category-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      flex: 1;
+    }
+
+    .category-count {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      font-family: var(--font-mono);
+    }
+
+    .category-cards-list {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Flow Node */
+    .flow-node-demo {
+      background: var(--color-bg-elevated);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      min-width: 160px;
+      max-width: 200px;
+      position: relative;
+      transition: all var(--transition);
+    }
+
+    .flow-node-demo:hover {
+      border-color: var(--color-accent);
+      box-shadow: var(--shadow-md);
+    }
+
+    .flow-node-connector {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background: var(--color-bg-elevated);
+      border: 2px solid var(--color-border);
+      border-radius: 50%;
+      cursor: crosshair;
+    }
+
+    .flow-node-connector.in {
+      top: -7px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .flow-node-connector.out {
+      bottom: -7px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .flow-node-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    .flow-node-preview {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+    }
+
+    /* Composer */
+    .composer-demo {
+      padding: 20px;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .composer-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .composer-input {
+      flex: 1;
+      min-width: 200px;
+      border: none;
+      background: transparent;
+      font-size: 1rem;
+      font-family: inherit;
+      resize: none;
+      line-height: 1.6;
+      padding: 8px 0;
+    }
+
+    .composer-input:focus {
+      outline: none;
+    }
+
+    .composer-actions {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--color-border-light);
+      margin-top: 8px;
+    }
+
+    /* Data Buttons */
+    .data-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      background: transparent;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .data-btn:hover {
+      background: var(--color-bg-elevated);
+      border-color: var(--color-text);
+      color: var(--color-text);
+    }
+
+    /* Empty State */
+    .empty-state-demo {
+      text-align: center;
+      padding: 60px 20px;
+      background: var(--color-bg-elevated);
+      border: 1px dashed var(--color-border);
+      border-radius: var(--radius-md);
+    }
+
+    .empty-icon {
+      font-size: 4rem;
+      display: block;
+      margin-bottom: 16px;
+      opacity: 0.4;
+    }
+
+    .empty-text {
+      font-size: 1.1rem;
+      color: var(--color-text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .empty-hint {
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+    }
+
+    /* Drag Demo */
+    .drag-demo-container {
+      display: flex;
+      gap: 24px;
+    }
+
+    .drag-demo-column {
+      flex: 1;
+      min-height: 200px;
+      background: var(--color-bg);
+      border: 2px dashed var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+
+    .drag-demo-column.drag-over {
+      border-color: var(--color-accent);
+      background: rgba(102, 126, 234, 0.05);
+    }
+
+    .drag-demo-item {
+      padding: 12px 16px;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      cursor: grab;
+      margin-bottom: 8px;
+      transition: all var(--transition);
+    }
+
+    .drag-demo-item:hover {
+      border-color: var(--color-accent);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .drag-demo-item.dragging {
+      opacity: 0.5;
+      transform: rotate(2deg);
+    }
+
+    /* Colors */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+    }
+
+    .color-item {
+      text-align: center;
+    }
+
+    .color-swatch {
+      height: 80px;
+      border-radius: var(--radius-md);
+      margin-bottom: 8px;
+    }
+
+    .color-name {
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .color-value {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+
+    /* Typography */
+    .typo-sample {
+      margin-bottom: 24px;
+    }
+
+    .typo-label {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      font-family: var(--font-mono);
+      margin-bottom: 8px;
+    }
+
+    .typo-display {
+      font-family: var(--font-display);
+      font-size: 3rem;
+    }
+
+    .typo-body {
+      font-family: var(--font-body);
+      font-size: 1rem;
+    }
+
+    .typo-mono {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+
+      .main {
+        margin-left: 0;
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">Idea Flow</div>
+      <div class="sidebar-subtitle">Component Storybook</div>
+
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Foundation</div>
+          <a href="#colors" class="sidebar-link">Colors</a>
+          <a href="#typography" class="sidebar-link">Typography</a>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Components</div>
+          <a href="#buttons" class="sidebar-link">Buttons</a>
+          <a href="#cards" class="sidebar-link">Cards</a>
+          <a href="#modals" class="sidebar-link">Modals</a>
+          <a href="#inputs" class="sidebar-link">Inputs</a>
+          <a href="#presets" class="sidebar-link">Preset Selector</a>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Features</div>
+          <a href="#composer" class="sidebar-link">Composer</a>
+          <a href="#view-toggle" class="sidebar-link">View Toggle</a>
+          <a href="#category-column" class="sidebar-link">Category Column</a>
+          <a href="#flow-node" class="sidebar-link">Flow Node</a>
+          <a href="#drag-drop" class="sidebar-link">Drag & Drop</a>
+          <a href="#empty-state" class="sidebar-link">Empty State</a>
+          <a href="#data-actions" class="sidebar-link">Data Actions</a>
+        </div>
+      </nav>
+
+      <a href="index.html" class="sidebar-back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back to Docs
+      </a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Foundation: Colors -->
+      <section id="colors" class="section">
+        <h1 class="section-title">Colors</h1>
+        <p class="section-desc">Idea Flow 使用柔和的中性色調作為基礎，搭配漸層色彩作為強調色。</p>
+
+        <div class="component">
+          <h2 class="component-title">Base Colors</h2>
+          <div class="demo-box">
+            <div class="color-grid">
+              <div class="color-item">
+                <div class="color-swatch" style="background: #faf9f7; border: 1px solid #e8e6e3;"></div>
+                <div class="color-name">Background</div>
+                <div class="color-value">#faf9f7</div>
+              </div>
+              <div class="color-item">
+                <div class="color-swatch" style="background: #ffffff; border: 1px solid #e8e6e3;"></div>
+                <div class="color-name">Elevated</div>
+                <div class="color-value">#ffffff</div>
+              </div>
+              <div class="color-item">
+                <div class="color-swatch" style="background: #1a1a1a;"></div>
+                <div class="color-name">Text</div>
+                <div class="color-value">#1a1a1a</div>
+              </div>
+              <div class="color-item">
+                <div class="color-swatch" style="background: #666666;"></div>
+                <div class="color-name">Text Secondary</div>
+                <div class="color-value">#666666</div>
+              </div>
+              <div class="color-item">
+                <div class="color-swatch" style="background: #999999;"></div>
+                <div class="color-name">Text Muted</div>
+                <div class="color-value">#999999</div>
+              </div>
+              <div class="color-item">
+                <div class="color-swatch" style="background: #e8e6e3;"></div>
+                <div class="color-name">Border</div>
+                <div class="color-value">#e8e6e3</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="component">
+          <h2 class="component-title">Accent Gradients</h2>
+          <div class="demo-box">
+            <div class="color-grid">
+              <div class="color-item">
+                <div class="color-swatch" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+                <div class="color-name">Purple</div>
+              </div>
+              <div class="color-item">
+                <div class="color-swatch" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
+                <div class="color-name">Pink</div>
+              </div>
+              <div class="color-item">
+                <div class="color-swatch" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                <div class="color-name">Blue</div>
+              </div>
+              <div class="color-item">
+                <div class="color-swatch" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"></div>
+                <div class="color-name">Green</div>
+              </div>
+              <div class="color-item">
+                <div class="color-swatch" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+                <div class="color-name">Warm</div>
+              </div>
+              <div class="color-item">
+                <div class="color-swatch" style="background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);"></div>
+                <div class="color-name">Lavender</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Foundation: Typography -->
+      <section id="typography" class="section">
+        <h1 class="section-title">Typography</h1>
+        <p class="section-desc">使用三種字體家族：Instrument Serif 用於標題、Noto Sans TC 用於內文、Space Mono 用於程式碼。</p>
+
+        <div class="demo-box">
+          <div class="typo-sample">
+            <div class="typo-label">Display - Instrument Serif</div>
+            <div class="typo-display">Idea Flow</div>
+          </div>
+          <div class="typo-sample">
+            <div class="typo-label">Body - Noto Sans TC</div>
+            <div class="typo-body">讓靈感自由流動，捕捉每一個有價值的想法。這是一個簡潔優雅的靈感管理系統。</div>
+          </div>
+          <div class="typo-sample">
+            <div class="typo-label">Mono - Space Mono</div>
+            <div class="typo-mono">const idea = "Capture your thoughts";</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Components: Buttons -->
+      <section id="buttons" class="section">
+        <h1 class="section-title">Buttons</h1>
+        <p class="section-desc">各種按鈕樣式，包括主要按鈕、幽靈按鈕、危險按鈕等。</p>
+
+        <div class="component">
+          <h2 class="component-title">Primary Buttons</h2>
+          <div class="demo-box">
+            <div class="demo-row">
+              <button class="btn btn--primary">Primary Button</button>
+              <button class="btn btn--primary btn--sm">Small</button>
+              <button class="btn btn--primary" disabled>Disabled</button>
+            </div>
+          </div>
+          <div class="code-block">
+<span class="tag">&lt;button</span> <span class="attr">class</span>=<span class="string">"btn btn--primary"</span><span class="tag">&gt;</span>Primary Button<span class="tag">&lt;/button&gt;</span>
+          </div>
+        </div>
+
+        <div class="component">
+          <h2 class="component-title">Ghost Buttons</h2>
+          <div class="demo-box">
+            <div class="demo-row">
+              <button class="btn btn--ghost">Ghost Button</button>
+              <button class="btn btn--ghost btn--sm">Small</button>
+              <button class="btn btn--danger">Danger</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="component">
+          <h2 class="component-title">Action Buttons</h2>
+          <p class="component-desc">用於卡片上的操作按鈕，具有 monospace 字體。</p>
+          <div class="demo-box">
+            <div class="demo-row">
+              <button class="post-action-btn">copy</button>
+              <button class="post-action-btn">edit</button>
+              <button class="post-action-btn post-action-btn--danger">delete</button>
+              <button class="post-action-btn post-action-btn--copy copied">copied</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="component">
+          <h2 class="component-title">Icon Button</h2>
+          <div class="demo-box">
+            <div class="demo-row">
+              <button class="btn btn--ghost btn--icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Components: Cards -->
+      <section id="cards" class="section">
+        <h1 class="section-title">Cards</h1>
+        <p class="section-desc">不同類型的卡片組件，用於展示專案和想法。</p>
+
+        <div class="component">
+          <h2 class="component-title">Project Card</h2>
+          <p class="component-desc">專案選擇頁面的卡片，帶有漸層頭像和左側強調條。</p>
+          <div class="demo-box">
+            <div style="max-width: 400px;">
+              <button class="project-card" style="--accent: #667eea;">
+                <div class="project-avatar" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">&#129504;</div>
+                <div class="project-info">
+                  <span class="project-name">Design Ideas</span>
+                  <span class="project-meta">last post: 2h ago</span>
+                </div>
+                <div class="project-count">42</div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="component">
+          <h2 class="component-title">Post Card (List Mode)</h2>
+          <p class="component-desc">列表模式下顯示完整內容的卡片。</p>
+          <div class="demo-box">
+            <div class="post-card-demo">
+              <div class="post-title"># Product Ideas</div>
+              <div class="post-header">
+                <div class="post-avatar" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">&#129504;</div>
+                <div class="post-meta">
+                  <span class="post-author">Design Ideas</span>
+                  <span class="post-time">2h ago</span>
+                </div>
+              </div>
+              <div class="post-content">
+                這是一個關於產品設計的想法。我們可以考慮加入更多的動畫效果來提升使用者體驗。
+              </div>
+              <div class="post-actions">
+                <button class="post-action-btn">copy</button>
+                <button class="post-action-btn">edit</button>
+                <button class="post-action-btn post-action-btn--danger">delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="component">
+          <h2 class="component-title">Post Card (Grid Mode)</h2>
+          <p class="component-desc">網格模式下的正方形卡片，只顯示標題。</p>
+          <div class="demo-box">
+            <div class="demo-grid">
+              <div class="grid-card-demo">
+                <div class="grid-card-title"># Product Ideas</div>
+                <div class="grid-card-footer">
+                  <div class="grid-card-avatar" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">&#129504;</div>
+                  <span class="grid-card-time">2h ago</span>
+                </div>
+              </div>
+              <div class="grid-card-demo">
+                <div class="grid-card-title"># UX Research</div>
+                <div class="grid-card-footer">
+                  <div class="grid-card-avatar" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">&#9889;</div>
+                  <span class="grid-card-time">5h ago</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="component">
+          <h2 class="component-title">Category Card</h2>
+          <p class="component-desc">分類模式中使用的小型卡片，支援拖放。</p>
+          <div class="demo-box">
+            <div style="max-width: 250px;">
+              <div class="category-card">
+                <div class="category-card-title"># Product Ideas</div>
+                <div class="category-card-preview">這是一個關於產品設計的想法...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Components: Modals -->
+      <section id="modals" class="section">
+        <h1 class="section-title">Modals</h1>
+        <p class="section-desc">彈出式視窗，用於建立專案、編輯內容等操作。</p>
+
+        <div class="component">
+          <h2 class="component-title">Create Project Modal</h2>
+          <div class="demo-box demo-box-dark" style="display: flex; justify-content: center; padding: 48px;">
+            <div class="modal-demo">
+              <h2 class="modal-title">建立新腦袋</h2>
+              <input type="text" class="modal-input" placeholder="專案名稱...">
+              <div style="margin-top: 24px;">
+                <p style="font-size: 0.85rem; color: var(--color-text-secondary); margin-bottom: 12px;">選擇人格</p>
+                <div class="preset-grid">
+                  <button class="preset-btn preset-btn--selected" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">&#129504;</button>
+                  <button class="preset-btn" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">&#9889;</button>
+                  <button class="preset-btn" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">&#128302;</button>
+                  <button class="preset-btn" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">&#127807;</button>
+                </div>
+              </div>
+              <div class="modal-actions">
+                <button class="btn btn--ghost">取消</button>
+                <button class="btn btn--primary">建立</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Components: Inputs -->
+      <section id="inputs" class="section">
+        <h1 class="section-title">Inputs</h1>
+        <p class="section-desc">表單輸入元件。</p>
+
+        <div class="component">
+          <h2 class="component-title">Text Input</h2>
+          <div class="demo-box">
+            <input type="text" class="modal-input" placeholder="輸入文字..." style="max-width: 300px;">
+          </div>
+        </div>
+
+        <div class="component">
+          <h2 class="component-title">Textarea</h2>
+          <div class="demo-box">
+            <textarea class="modal-input" placeholder="輸入多行文字..." style="min-height: 120px; resize: vertical;"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- Components: Preset Selector -->
+      <section id="presets" class="section">
+        <h1 class="section-title">Preset Selector</h1>
+        <p class="section-desc">用於選擇專案風格的預設按鈕組。</p>
+
+        <div class="demo-box">
+          <div class="preset-grid" style="max-width: 300px;">
+            <button class="preset-btn preset-btn--selected" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">&#129504;</button>
+            <button class="preset-btn" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">&#9889;</button>
+            <button class="preset-btn" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">&#128302;</button>
+            <button class="preset-btn" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">&#127807;</button>
+            <button class="preset-btn" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">&#128293;</button>
+            <button class="preset-btn" style="background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);">&#127769;</button>
+            <button class="preset-btn" style="background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);">&#128142;</button>
+            <button class="preset-btn" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">&#127919;</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features: Composer -->
+      <section id="composer" class="section">
+        <h1 class="section-title">Composer</h1>
+        <p class="section-desc">發布新想法的輸入區域。</p>
+
+        <div class="demo-box">
+          <div class="composer-demo">
+            <div class="composer-avatar" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">&#129504;</div>
+            <textarea class="composer-input" placeholder="What are you thinking? (# 開頭可加標題)" rows="3"></textarea>
+            <div class="composer-actions">
+              <button class="btn btn--ghost btn--sm">取消</button>
+              <button class="btn btn--primary btn--sm">Post</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features: View Toggle -->
+      <section id="view-toggle" class="section">
+        <h1 class="section-title">View Toggle</h1>
+        <p class="section-desc">切換不同檢視模式的按鈕組。</p>
+
+        <div class="demo-box">
+          <div class="view-toggle">
+            <button class="view-toggle-btn active" title="列表模式">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+                <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+              </svg>
+            </button>
+            <button class="view-toggle-btn" title="卡片模式">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+              </svg>
+            </button>
+            <button class="view-toggle-btn" title="分類模式">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/>
+              </svg>
+            </button>
+            <button class="view-toggle-btn" title="流程模式">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="5" cy="6" r="3"/><circle cx="19" cy="6" r="3"/><circle cx="12" cy="18" r="3"/>
+                <line x1="5" y1="9" x2="12" y2="15"/><line x1="19" y1="9" x2="12" y2="15"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features: Category Column -->
+      <section id="category-column" class="section">
+        <h1 class="section-title">Category Column</h1>
+        <p class="section-desc">分類模式中的欄位，可接收拖放的卡片。</p>
+
+        <div class="demo-box">
+          <div class="category-column-demo">
+            <div class="category-header">
+              <div class="category-color" style="background: #667eea;"></div>
+              <span class="category-name">待處理</span>
+              <span class="category-count">3</span>
+            </div>
+            <div class="category-cards-list">
+              <div class="category-card">
+                <div class="category-card-title"># 設計系統</div>
+                <div class="category-card-preview">建立完整的 UI 組件庫...</div>
+              </div>
+              <div class="category-card">
+                <div class="category-card-title"># API 整合</div>
+                <div class="category-card-preview">需要與後端 API 對接...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features: Flow Node -->
+      <section id="flow-node" class="section">
+        <h1 class="section-title">Flow Node</h1>
+        <p class="section-desc">流程模式中的節點，具有上下連接點。</p>
+
+        <div class="demo-box">
+          <div class="demo-row" style="gap: 48px; justify-content: center;">
+            <div class="flow-node-demo">
+              <div class="flow-node-connector in"></div>
+              <div class="flow-node-title"># 需求分析</div>
+              <div class="flow-node-preview">確定產品需求和目標...</div>
+              <div class="flow-node-connector out"></div>
+            </div>
+            <div class="flow-node-demo">
+              <div class="flow-node-connector in"></div>
+              <div class="flow-node-title"># 設計階段</div>
+              <div class="flow-node-preview">進行 UI/UX 設計...</div>
+              <div class="flow-node-connector out"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="component" style="margin-top: 24px;">
+          <h3 class="component-title">Connection Points</h3>
+          <p class="component-desc">
+            - <strong>上方連接點 (in)</strong>: 接收來自其他節點的連線<br>
+            - <strong>下方連接點 (out)</strong>: 從此節點發出連線到其他節點<br>
+            - 滑鼠從 out 拖曳到另一個節點的 in 即可建立連線
+          </p>
+        </div>
+      </section>
+
+      <!-- Features: Drag & Drop -->
+      <section id="drag-drop" class="section">
+        <h1 class="section-title">Drag & Drop</h1>
+        <p class="section-desc">拖放功能用於分類模式和流程模式中的卡片整理。</p>
+
+        <div class="component">
+          <h2 class="component-title">互動說明</h2>
+          <div class="demo-box">
+            <div class="drag-demo-container">
+              <div class="drag-demo-column" id="dragCol1">
+                <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 12px;">未分類</div>
+                <div class="drag-demo-item" draggable="true">拖曳我到右邊</div>
+                <div class="drag-demo-item" draggable="true">也可以拖曳我</div>
+              </div>
+              <div class="drag-demo-column" id="dragCol2">
+                <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 12px;">已分類</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="component">
+          <h2 class="component-title">使用方式</h2>
+          <p class="component-desc">
+            1. <strong>分類模式</strong>: 在欄位之間拖曳卡片來改變分類<br>
+            2. <strong>流程模式</strong>: 從底部的未分配區域拖曳卡片到畫布上<br>
+            3. <strong>節點移動</strong>: 在流程模式中拖曳節點來重新排列位置<br>
+            4. <strong>建立連線</strong>: 從節點的輸出連接點拖曳到另一節點的輸入連接點
+          </p>
+        </div>
+      </section>
+
+      <!-- Features: Empty State -->
+      <section id="empty-state" class="section">
+        <h1 class="section-title">Empty State</h1>
+        <p class="section-desc">當沒有內容時顯示的空狀態提示。</p>
+
+        <div class="demo-box">
+          <div class="empty-state-demo">
+            <span class="empty-icon">&#129504;</span>
+            <p class="empty-text">這個腦袋還沒有任何想法</p>
+            <p class="empty-hint">開始對未來的自己發文吧</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features: Data Actions -->
+      <section id="data-actions" class="section">
+        <h1 class="section-title">Data Actions</h1>
+        <p class="section-desc">資料匯出與匯入功能按鈕。</p>
+
+        <div class="demo-box">
+          <div class="demo-row">
+            <button class="data-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              匯出 JSON
+            </button>
+            <button class="data-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              匯入 JSON
+            </button>
+          </div>
+        </div>
+
+        <div class="component" style="margin-top: 24px;">
+          <h3 class="component-title">功能說明</h3>
+          <p class="component-desc">
+            - <strong>匯出 JSON</strong>: 將所有專案、想法、分類資料打包成 JSON 檔案下載<br>
+            - <strong>匯入 JSON</strong>: 上傳 JSON 備份檔案，可選擇合併或覆蓋現有資料<br>
+            - 匯出檔案包含版本資訊和匯出時間戳
+          </p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Simple drag and drop demo
+    const items = document.querySelectorAll('.drag-demo-item');
+    const columns = document.querySelectorAll('.drag-demo-column');
+
+    items.forEach(item => {
+      item.addEventListener('dragstart', () => {
+        item.classList.add('dragging');
+      });
+
+      item.addEventListener('dragend', () => {
+        item.classList.remove('dragging');
+      });
+    });
+
+    columns.forEach(column => {
+      column.addEventListener('dragover', e => {
+        e.preventDefault();
+        column.classList.add('drag-over');
+      });
+
+      column.addEventListener('dragleave', () => {
+        column.classList.remove('drag-over');
+      });
+
+      column.addEventListener('drop', e => {
+        e.preventDefault();
+        column.classList.remove('drag-over');
+        const dragging = document.querySelector('.dragging');
+        if (dragging) {
+          column.appendChild(dragging);
+        }
+      });
+    });
+
+    // Smooth scroll for sidebar links
+    document.querySelectorAll('.sidebar-link').forEach(link => {
+      link.addEventListener('click', e => {
+        document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      });
+    });
+
+    // Highlight current section on scroll
+    const sections = document.querySelectorAll('section[id]');
+    const sidebarLinks = document.querySelectorAll('.sidebar-link');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (scrollY >= sectionTop - 100) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      sidebarLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('active');
+        }
+      });
+    });
+
+    // Preset button demo
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('preset-btn--selected'));
+        btn.classList.add('preset-btn--selected');
+      });
+    });
+
+    // View toggle demo
+    document.querySelectorAll('.view-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
