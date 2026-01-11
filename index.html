@@ -1226,6 +1226,12 @@
       color: #e53e3e;
     }
 
+    .post-action-btn--copy.copied {
+      background: #c6f6d5;
+      border-color: #38a169;
+      color: #38a169;
+    }
+
     /* Edit Modal */
     .edit-textarea {
       width: 100%;
@@ -1521,6 +1527,7 @@
                 <span class="view-modal-time">${formatTime(state.viewingPost.createdAt)}</span>
               </div>
               <div class="view-modal-actions">
+                <button class="btn btn--ghost btn--sm" id="viewCopyBtn">複製</button>
                 <button class="btn btn--ghost btn--sm" id="viewEditBtn">編輯</button>
                 <button class="btn btn--primary btn--sm" id="viewCloseBtn">關閉</button>
               </div>
@@ -1616,6 +1623,7 @@
             </div>
             <div class="post-content">${body || post.contentText}</div>
             <div class="post-actions">
+              <button class="post-action-btn post-action-btn--copy" data-action="copy" data-id="${post.id}">copy</button>
               <button class="post-action-btn" data-action="edit" data-id="${post.id}">edit</button>
               <button class="post-action-btn post-action-btn--danger" data-action="delete" data-id="${post.id}">delete</button>
             </div>
@@ -1647,6 +1655,7 @@
         return `
           <article class="post-card" data-post-id="${post.id}">
             <div class="post-actions">
+              <button class="post-action-btn post-action-btn--copy" data-action="copy" data-id="${post.id}">cp</button>
               <button class="post-action-btn" data-action="edit" data-id="${post.id}">edit</button>
               <button class="post-action-btn post-action-btn--danger" data-action="delete" data-id="${post.id}">del</button>
             </div>
@@ -1731,6 +1740,7 @@
       return `
         <div class="category-card" draggable="true" data-post-id="${post.id}">
           <div class="category-card-actions">
+            <button class="post-action-btn post-action-btn--copy" data-action="copy" data-id="${post.id}" style="padding: 2px 6px; font-size: 0.7rem;">cp</button>
             <button class="post-action-btn" data-action="edit" data-id="${post.id}" style="padding: 2px 6px; font-size: 0.7rem;">edit</button>
             <button class="post-action-btn post-action-btn--danger" data-action="delete" data-id="${post.id}" style="padding: 2px 6px; font-size: 0.7rem;">del</button>
           </div>
@@ -2028,7 +2038,7 @@
     function bindListModeEvents() {
       document.querySelectorAll('.post-action-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
-          handlePostAction(btn.dataset.action, btn.dataset.id);
+          handlePostAction(btn.dataset.action, btn.dataset.id, btn);
         });
       });
     }
@@ -2047,7 +2057,7 @@
       document.querySelectorAll('.post-action-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
-          handlePostAction(btn.dataset.action, btn.dataset.id);
+          handlePostAction(btn.dataset.action, btn.dataset.id, btn);
         });
       });
     }
@@ -2115,7 +2125,7 @@
       document.querySelectorAll('.post-action-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
-          handlePostAction(btn.dataset.action, btn.dataset.id);
+          handlePostAction(btn.dataset.action, btn.dataset.id, btn);
         });
       });
 
@@ -2349,6 +2359,15 @@
           state.viewingPost = null;
           render();
         });
+        document.getElementById('viewCopyBtn')?.addEventListener('click', (e) => {
+          navigator.clipboard.writeText(state.viewingPost.contentText).then(() => {
+            const btn = e.target;
+            btn.textContent = '已複製 ✓';
+            setTimeout(() => {
+              btn.textContent = '複製';
+            }, 1000);
+          });
+        });
         viewModal?.addEventListener('click', (e) => {
           if (e.target.id === 'viewModal') {
             state.viewingPost = null;
@@ -2409,7 +2428,7 @@
     }
 
     // 處理貼文操作
-    function handlePostAction(action, id) {
+    function handlePostAction(action, id, btnElement) {
       if (action === 'delete') {
         if (confirm('確定要刪除這則想法嗎？')) {
           state.posts = state.posts.filter(p => p.id !== id);
@@ -2419,6 +2438,21 @@
       } else if (action === 'edit') {
         state.editingPost = state.posts.find(p => p.id === id);
         render();
+      } else if (action === 'copy') {
+        const post = state.posts.find(p => p.id === id);
+        if (post) {
+          navigator.clipboard.writeText(post.contentText).then(() => {
+            if (btnElement) {
+              const originalText = btnElement.textContent;
+              btnElement.textContent = '✓';
+              btnElement.classList.add('copied');
+              setTimeout(() => {
+                btnElement.textContent = originalText;
+                btnElement.classList.remove('copied');
+              }, 1000);
+            }
+          });
+        }
       }
     }
 
