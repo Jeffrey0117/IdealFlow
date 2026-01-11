@@ -724,6 +724,368 @@
       justify-content: center;
     }
 
+    /* ============ Category Mode ============ */
+    .category-container {
+      display: flex;
+      gap: 16px;
+      padding: 20px;
+      overflow-x: auto;
+      min-height: calc(100vh - 140px);
+      align-items: flex-start;
+    }
+
+    .category-column {
+      flex-shrink: 0;
+      width: 260px;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      max-height: calc(100vh - 180px);
+    }
+
+    .category-column.drag-over {
+      border-color: var(--accent, #667eea);
+      box-shadow: 0 0 0 2px var(--accent, #667eea);
+    }
+
+    .category-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--color-border-light);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: grab;
+    }
+
+    .category-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .category-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      flex: 1;
+    }
+
+    .category-count {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      font-family: var(--font-mono);
+    }
+
+    .category-menu-btn {
+      width: 24px;
+      height: 24px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: var(--color-text-muted);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: all var(--transition);
+    }
+
+    .category-header:hover .category-menu-btn {
+      opacity: 1;
+    }
+
+    .category-menu-btn:hover {
+      background: var(--color-bg);
+      color: var(--color-text);
+    }
+
+    .category-cards {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .category-card {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      cursor: grab;
+      transition: all var(--transition);
+      position: relative;
+    }
+
+    .category-card:hover {
+      border-color: var(--color-border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .category-card.dragging {
+      opacity: 0.5;
+      transform: rotate(2deg);
+    }
+
+    .category-card-title {
+      font-weight: 500;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    .category-card-preview {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .category-card-actions {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      display: flex;
+      gap: 2px;
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .category-card:hover .category-card-actions {
+      opacity: 1;
+    }
+
+    .add-category-btn {
+      flex-shrink: 0;
+      width: 260px;
+      height: 60px;
+      border: 2px dashed var(--color-border);
+      border-radius: var(--radius-md);
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--color-text-muted);
+      font-family: inherit;
+      font-size: 0.9rem;
+      transition: all var(--transition);
+    }
+
+    .add-category-btn:hover {
+      border-color: var(--color-text);
+      color: var(--color-text);
+      background: var(--color-bg-elevated);
+    }
+
+    /* ============ Flow Mode ============ */
+    .flow-container {
+      position: relative;
+      width: 100%;
+      height: calc(100vh - 140px);
+      overflow: hidden;
+      background: 
+        radial-gradient(circle at 1px 1px, var(--color-border-light) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+
+    .flow-canvas {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      transform-origin: 0 0;
+    }
+
+    .flow-connections {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .flow-connections line {
+      stroke: var(--color-text-muted);
+      stroke-width: 2;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+
+    .flow-connections line:hover {
+      stroke: #e53e3e;
+      stroke-width: 3;
+    }
+
+    .flow-connections .arrow-head {
+      fill: var(--color-text-muted);
+    }
+
+    .flow-node {
+      position: absolute;
+      background: var(--color-bg-elevated);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      min-width: 160px;
+      max-width: 200px;
+      cursor: grab;
+      z-index: 2;
+      transition: box-shadow var(--transition), border-color var(--transition);
+    }
+
+    .flow-node:hover {
+      border-color: var(--accent, #667eea);
+      box-shadow: var(--shadow-md);
+    }
+
+    .flow-node.dragging {
+      cursor: grabbing;
+      box-shadow: var(--shadow-lg);
+      z-index: 10;
+    }
+
+    .flow-node.selected {
+      border-color: var(--accent, #667eea);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    }
+
+    .flow-node-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    .flow-node-preview {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .flow-node-connector {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background: var(--color-bg-elevated);
+      border: 2px solid var(--color-border);
+      border-radius: 50%;
+      cursor: crosshair;
+      z-index: 3;
+      transition: all var(--transition);
+    }
+
+    .flow-node-connector:hover {
+      background: var(--accent, #667eea);
+      border-color: var(--accent, #667eea);
+      transform: scale(1.3);
+    }
+
+    .flow-node-connector.out {
+      bottom: -7px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .flow-node-connector.out:hover {
+      transform: translateX(-50%) scale(1.3);
+    }
+
+    .flow-node-connector.in {
+      top: -7px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .flow-node-connector.in:hover {
+      transform: translateX(-50%) scale(1.3);
+    }
+
+    .flow-unassigned {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--color-bg-elevated);
+      border-top: 1px solid var(--color-border);
+      padding: 16px;
+      z-index: 20;
+    }
+
+    .flow-unassigned-label {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-bottom: 12px;
+      font-family: var(--font-mono);
+    }
+
+    .flow-unassigned-cards {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .flow-unassigned-card {
+      flex-shrink: 0;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      cursor: grab;
+      min-width: 140px;
+      max-width: 180px;
+      transition: all var(--transition);
+    }
+
+    .flow-unassigned-card:hover {
+      border-color: var(--accent, #667eea);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .flow-controls {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      gap: 8px;
+      z-index: 20;
+    }
+
+    .flow-control-btn {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--color-border);
+      background: var(--color-bg-elevated);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text);
+      transition: all var(--transition);
+    }
+
+    .flow-control-btn:hover {
+      background: var(--color-bg);
+      border-color: var(--color-text);
+    }
+
+    .drawing-line {
+      position: absolute;
+      pointer-events: none;
+      z-index: 100;
+    }
+
     @keyframes slideIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
@@ -915,12 +1277,20 @@
       { id: 'preset-8', avatar: '🎯', gradient: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)', accent: '#ff9a9e', bgTint: 'rgba(255, 154, 158, 0.03)' },
     ];
 
+    // 預設類別顏色
+    const CATEGORY_COLORS = [
+      '#667eea', '#f5576c', '#4facfe', '#43e97b', 
+      '#fa709a', '#a18cd1', '#66a6ff', '#ff9a9e'
+    ];
+
     // 資料存取
     const storage = {
       getProjects: () => JSON.parse(localStorage.getItem('ideaflow_projects') || '[]'),
       setProjects: (projects) => localStorage.setItem('ideaflow_projects', JSON.stringify(projects)),
       getPosts: () => JSON.parse(localStorage.getItem('ideaflow_posts') || '[]'),
       setPosts: (posts) => localStorage.setItem('ideaflow_posts', JSON.stringify(posts)),
+      getCategories: () => JSON.parse(localStorage.getItem('ideaflow_categories') || '[]'),
+      setCategories: (categories) => localStorage.setItem('ideaflow_categories', JSON.stringify(categories)),
     };
 
     // 工具函數
@@ -943,11 +1313,16 @@
     let state = {
       projects: [],
       posts: [],
+      categories: [],
       currentProject: null,
       selectedPreset: 0,
       editingPost: null,
       viewingPost: null,
-      viewMode: 'list', // 'list' or 'grid'
+      viewMode: 'list', // 'list', 'grid', 'category', 'flow'
+      // 流程模式狀態
+      flowScale: 1,
+      flowOffset: { x: 0, y: 0 },
+      drawingConnection: null, // { fromId, startX, startY, currentX, currentY }
     };
 
     // 解析標題 (第一行 # 開頭)
@@ -968,6 +1343,7 @@
     function init() {
       state.projects = storage.getProjects();
       state.posts = storage.getPosts();
+      state.categories = storage.getCategories();
       render();
     }
 
@@ -1044,62 +1420,21 @@
     // 渲染時間軸
     function renderTimeline() {
       const project = state.currentProject;
-      const posts = state.posts
-        .filter(p => p.projectId === project.id)
-        .sort((a, b) => b.createdAt - a.createdAt);
+      const projectPosts = state.posts.filter(p => p.projectId === project.id);
+      const projectCategories = state.categories.filter(c => c.projectId === project.id);
 
-      const isGrid = state.viewMode === 'grid';
-
-      const postsHtml = posts.length === 0 
-        ? `
-          <div class="empty-state">
-            <span class="empty-icon">${project.preset.avatar}</span>
-            <p class="empty-text">這個腦袋還沒有任何想法</p>
-            <p class="empty-hint">開始對未來的自己發文吧</p>
-          </div>
-        `
-        : posts.map(post => {
-          const { title, body } = parsePost(post.contentText);
-          
-          if (isGrid) {
-            // Grid 卡片模式
-            return `
-              <article class="post-card" data-post-id="${post.id}">
-                <div class="post-actions">
-                  <button class="post-action-btn" data-action="edit" data-id="${post.id}">edit</button>
-                  <button class="post-action-btn post-action-btn--danger" data-action="delete" data-id="${post.id}">del</button>
-                </div>
-                ${title 
-                  ? `<div class="post-title"># ${title}</div>` 
-                  : `<div class="no-title-card">${post.contentText}</div>`
-                }
-                <div class="post-card-footer">
-                  <div class="post-card-avatar" style="background: ${project.preset.gradient}">${project.preset.avatar}</div>
-                  <span class="post-card-time">${formatTime(post.createdAt)}</span>
-                </div>
-              </article>
-            `;
-          } else {
-            // List 全文模式
-            return `
-              <article class="post-card" data-post-id="${post.id}">
-                ${title ? `<div class="post-title"># ${title}</div>` : ''}
-                <div class="post-header">
-                  <div class="post-avatar" style="background: ${project.preset.gradient}">${project.preset.avatar}</div>
-                  <div class="post-meta">
-                    <span class="post-author">${project.name}</span>
-                    <span class="post-time">${formatTime(post.createdAt)}</span>
-                  </div>
-                </div>
-                <div class="post-content">${body || post.contentText}</div>
-                <div class="post-actions">
-                  <button class="post-action-btn" data-action="edit" data-id="${post.id}">edit</button>
-                  <button class="post-action-btn post-action-btn--danger" data-action="delete" data-id="${post.id}">delete</button>
-                </div>
-              </article>
-            `;
-          }
-        }).join('');
+      // 內容區域根據模式渲染
+      let contentHtml = '';
+      
+      if (state.viewMode === 'list') {
+        contentHtml = renderListMode(project, projectPosts);
+      } else if (state.viewMode === 'grid') {
+        contentHtml = renderGridMode(project, projectPosts);
+      } else if (state.viewMode === 'category') {
+        contentHtml = renderCategoryMode(project, projectPosts, projectCategories);
+      } else if (state.viewMode === 'flow') {
+        contentHtml = renderFlowMode(project, projectPosts);
+      }
 
       // 編輯 Modal
       const editModal = state.editingPost ? `
@@ -1117,7 +1452,7 @@
         </div>
       ` : '';
 
-      // 查看 Modal (Grid 模式點擊卡片)
+      // 查看 Modal
       let viewModal = '';
       if (state.viewingPost) {
         const { title, body } = parsePost(state.viewingPost.contentText);
@@ -1142,6 +1477,10 @@
       // 檢視切換圖示
       const listIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`;
       const gridIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>`;
+      const categoryIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>`;
+      const flowIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="6" r="3"/><circle cx="19" cy="6" r="3"/><circle cx="12" cy="18" r="3"/><line x1="5" y1="9" x2="12" y2="15"/><line x1="19" y1="9" x2="12" y2="15"/></svg>`;
+
+      const showComposer = state.viewMode === 'list' || state.viewMode === 'grid';
 
       return `
         <div class="timeline-container" style="--accent: ${project.preset.accent}; --bg-tint: ${project.preset.bgTint}">
@@ -1154,18 +1493,25 @@
             <div class="timeline-avatar" style="background: ${project.preset.gradient}">${project.preset.avatar}</div>
             <div class="timeline-info">
               <h1 class="timeline-title">${project.name}</h1>
-              <span class="timeline-count">${posts.length} thoughts</span>
+              <span class="timeline-count">${projectPosts.length} thoughts</span>
             </div>
             <div class="view-toggle">
-              <button class="view-toggle-btn ${!isGrid ? 'active' : ''}" data-view="list" title="全文模式">
+              <button class="view-toggle-btn ${state.viewMode === 'list' ? 'active' : ''}" data-view="list" title="全文模式">
                 ${listIcon}
               </button>
-              <button class="view-toggle-btn ${isGrid ? 'active' : ''}" data-view="grid" title="卡片模式">
+              <button class="view-toggle-btn ${state.viewMode === 'grid' ? 'active' : ''}" data-view="grid" title="卡片模式">
                 ${gridIcon}
+              </button>
+              <button class="view-toggle-btn ${state.viewMode === 'category' ? 'active' : ''}" data-view="category" title="分類模式">
+                ${categoryIcon}
+              </button>
+              <button class="view-toggle-btn ${state.viewMode === 'flow' ? 'active' : ''}" data-view="flow" title="流程模式">
+                ${flowIcon}
               </button>
             </div>
           </header>
 
+          ${showComposer ? `
           <div class="composer">
             <div class="composer-header">
               <div class="composer-avatar" style="background: ${project.preset.gradient}">${project.preset.avatar}</div>
@@ -1176,11 +1522,246 @@
               <button class="btn btn--primary btn--sm" id="postBtn">Post</button>
             </div>
           </div>
+          ` : ''}
 
-          <div class="posts-list ${isGrid ? 'grid-mode' : ''}">${postsHtml}</div>
+          ${contentHtml}
         </div>
         ${editModal}
         ${viewModal}
+      `;
+    }
+
+    // 渲染列表模式
+    function renderListMode(project, posts) {
+      const sortedPosts = posts.sort((a, b) => b.createdAt - a.createdAt);
+      
+      if (sortedPosts.length === 0) {
+        return `
+          <div class="posts-list">
+            <div class="empty-state">
+              <span class="empty-icon">${project.preset.avatar}</span>
+              <p class="empty-text">這個腦袋還沒有任何想法</p>
+              <p class="empty-hint">開始對未來的自己發文吧</p>
+            </div>
+          </div>
+        `;
+      }
+
+      const postsHtml = sortedPosts.map(post => {
+        const { title, body } = parsePost(post.contentText);
+        return `
+          <article class="post-card" data-post-id="${post.id}">
+            ${title ? `<div class="post-title"># ${title}</div>` : ''}
+            <div class="post-header">
+              <div class="post-avatar" style="background: ${project.preset.gradient}">${project.preset.avatar}</div>
+              <div class="post-meta">
+                <span class="post-author">${project.name}</span>
+                <span class="post-time">${formatTime(post.createdAt)}</span>
+              </div>
+            </div>
+            <div class="post-content">${body || post.contentText}</div>
+            <div class="post-actions">
+              <button class="post-action-btn" data-action="edit" data-id="${post.id}">edit</button>
+              <button class="post-action-btn post-action-btn--danger" data-action="delete" data-id="${post.id}">delete</button>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      return `<div class="posts-list">${postsHtml}</div>`;
+    }
+
+    // 渲染網格模式
+    function renderGridMode(project, posts) {
+      const sortedPosts = posts.sort((a, b) => b.createdAt - a.createdAt);
+      
+      if (sortedPosts.length === 0) {
+        return `
+          <div class="posts-list grid-mode">
+            <div class="empty-state">
+              <span class="empty-icon">${project.preset.avatar}</span>
+              <p class="empty-text">這個腦袋還沒有任何想法</p>
+              <p class="empty-hint">開始對未來的自己發文吧</p>
+            </div>
+          </div>
+        `;
+      }
+
+      const postsHtml = sortedPosts.map(post => {
+        const { title, body } = parsePost(post.contentText);
+        return `
+          <article class="post-card" data-post-id="${post.id}">
+            <div class="post-actions">
+              <button class="post-action-btn" data-action="edit" data-id="${post.id}">edit</button>
+              <button class="post-action-btn post-action-btn--danger" data-action="delete" data-id="${post.id}">del</button>
+            </div>
+            ${title 
+              ? `<div class="post-title"># ${title}</div>` 
+              : `<div class="no-title-card">${post.contentText}</div>`
+            }
+            <div class="post-card-footer">
+              <div class="post-card-avatar" style="background: ${project.preset.gradient}">${project.preset.avatar}</div>
+              <span class="post-card-time">${formatTime(post.createdAt)}</span>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      return `<div class="posts-list grid-mode">${postsHtml}</div>`;
+    }
+
+    // 渲染分類模式
+    function renderCategoryMode(project, posts, categories) {
+      // 未分類的貼文
+      const uncategorized = posts.filter(p => !p.categoryId);
+      
+      // 分類欄位
+      const categoryColumns = categories
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
+        .map(cat => {
+          const catPosts = posts
+            .filter(p => p.categoryId === cat.id)
+            .sort((a, b) => (a.categoryOrder || 0) - (b.categoryOrder || 0));
+          
+          return `
+            <div class="category-column" data-category-id="${cat.id}">
+              <div class="category-header">
+                <div class="category-color" style="background: ${cat.color}"></div>
+                <span class="category-name">${cat.name}</span>
+                <span class="category-count">${catPosts.length}</span>
+                <button class="category-menu-btn" data-category-id="${cat.id}" data-action="menu">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="category-cards" data-category-id="${cat.id}">
+                ${catPosts.map(post => renderCategoryCard(post)).join('')}
+              </div>
+            </div>
+          `;
+        }).join('');
+
+      // 未分類欄
+      const uncategorizedColumn = `
+        <div class="category-column" data-category-id="uncategorized">
+          <div class="category-header">
+            <div class="category-color" style="background: #999"></div>
+            <span class="category-name">未分類</span>
+            <span class="category-count">${uncategorized.length}</span>
+          </div>
+          <div class="category-cards" data-category-id="uncategorized">
+            ${uncategorized.sort((a, b) => b.createdAt - a.createdAt).map(post => renderCategoryCard(post)).join('')}
+          </div>
+        </div>
+      `;
+
+      return `
+        <div class="category-container">
+          ${uncategorizedColumn}
+          ${categoryColumns}
+          <button class="add-category-btn" id="addCategoryBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            新增分類
+          </button>
+        </div>
+      `;
+    }
+
+    // 渲染分類卡片
+    function renderCategoryCard(post) {
+      const { title, body } = parsePost(post.contentText);
+      return `
+        <div class="category-card" draggable="true" data-post-id="${post.id}">
+          <div class="category-card-actions">
+            <button class="post-action-btn" data-action="edit" data-id="${post.id}" style="padding: 2px 6px; font-size: 0.7rem;">edit</button>
+            <button class="post-action-btn post-action-btn--danger" data-action="delete" data-id="${post.id}" style="padding: 2px 6px; font-size: 0.7rem;">del</button>
+          </div>
+          ${title ? `<div class="category-card-title"># ${title}</div>` : ''}
+          <div class="category-card-preview">${body || post.contentText}</div>
+        </div>
+      `;
+    }
+
+    // 渲染流程模式
+    function renderFlowMode(project, posts) {
+      // 在流程圖中的節點
+      const flowNodes = posts.filter(p => p.flowX != null && p.flowY != null);
+      // 未放入流程的卡片
+      const unassigned = posts.filter(p => p.flowX == null || p.flowY == null);
+
+      const nodesHtml = flowNodes.map(post => {
+        const { title, body } = parsePost(post.contentText);
+        return `
+          <div class="flow-node" data-post-id="${post.id}" style="left: ${post.flowX}px; top: ${post.flowY}px;">
+            <div class="flow-node-connector in" data-post-id="${post.id}" data-type="in"></div>
+            ${title ? `<div class="flow-node-title"># ${title}</div>` : ''}
+            <div class="flow-node-preview">${body || post.contentText}</div>
+            <div class="flow-node-connector out" data-post-id="${post.id}" data-type="out"></div>
+          </div>
+        `;
+      }).join('');
+
+      // 連線 SVG
+      let connectionsHtml = '<svg class="flow-connections"><defs><marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" class="arrow-head"/></marker></defs>';
+      
+      flowNodes.forEach(fromPost => {
+        if (fromPost.flowConnections && fromPost.flowConnections.length > 0) {
+          fromPost.flowConnections.forEach(toId => {
+            const toPost = flowNodes.find(p => p.id === toId);
+            if (toPost) {
+              const x1 = fromPost.flowX + 80; // 中心點
+              const y1 = fromPost.flowY + 70; // 底部
+              const x2 = toPost.flowX + 80;
+              const y2 = toPost.flowY; // 頂部
+              connectionsHtml += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" marker-end="url(#arrowhead)" data-from="${fromPost.id}" data-to="${toId}"/>`;
+            }
+          });
+        }
+      });
+      connectionsHtml += '</svg>';
+
+      const unassignedHtml = unassigned.map(post => {
+        const { title } = parsePost(post.contentText);
+        return `
+          <div class="flow-unassigned-card" draggable="true" data-post-id="${post.id}">
+            <div class="category-card-title">${title ? `# ${title}` : '(無標題)'}</div>
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <div class="flow-container" id="flowContainer">
+          <div class="flow-controls">
+            <button class="flow-control-btn" id="flowZoomIn" title="放大">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/>
+              </svg>
+            </button>
+            <button class="flow-control-btn" id="flowZoomOut" title="縮小">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/>
+              </svg>
+            </button>
+            <button class="flow-control-btn" id="flowReset" title="重置">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
+              </svg>
+            </button>
+          </div>
+          <div class="flow-canvas" id="flowCanvas" style="transform: scale(${state.flowScale}) translate(${state.flowOffset.x}px, ${state.flowOffset.y}px)">
+            ${connectionsHtml}
+            ${nodesHtml}
+          </div>
+          <div class="flow-unassigned">
+            <div class="flow-unassigned-label">📥 拖曳到上方畫布加入流程</div>
+            <div class="flow-unassigned-cards">
+              ${unassignedHtml || '<span style="color: var(--color-text-muted); font-size: 0.85rem;">所有想法都已在流程中</span>'}
+            </div>
+          </div>
+        </div>
       `;
     }
 
@@ -1251,9 +1832,6 @@
 
     // 綁定時間軸事件
     function bindTimelineEvents() {
-      const input = document.getElementById('composerInput');
-      const actions = document.getElementById('composerActions');
-
       // 返回按鈕
       document.getElementById('backBtn').addEventListener('click', () => {
         state.currentProject = null;
@@ -1268,81 +1846,373 @@
         });
       });
 
-      // 展開輸入框
-      input.addEventListener('focus', () => {
-        input.rows = 4;
-        actions.classList.add('show');
-      });
-
-      // 取消發文
-      document.getElementById('cancelPostBtn').addEventListener('click', () => {
-        input.value = '';
-        input.rows = 1;
-        actions.classList.remove('show');
-        input.blur();
-      });
-
-      // 發文
-      document.getElementById('postBtn').addEventListener('click', createPost);
+      // Composer 事件 (只在 list 和 grid 模式)
+      const composerInput = document.getElementById('composerInput');
+      const composerActions = document.getElementById('composerActions');
       
-      // Ctrl/Cmd + Enter 發文
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-          createPost();
-        }
-      });
+      if (composerInput) {
+        composerInput.addEventListener('focus', () => {
+          composerInput.rows = 4;
+          composerActions.classList.add('show');
+        });
 
-      // Grid 模式：點擊卡片打開查看 modal
-      if (state.viewMode === 'grid') {
-        document.querySelectorAll('.post-card').forEach(card => {
-          card.addEventListener('click', (e) => {
-            // 如果點擊的是按鈕，不觸發查看
-            if (e.target.closest('.post-action-btn')) return;
-            
-            const id = card.dataset.postId;
-            state.viewingPost = state.posts.find(p => p.id === id);
-            render();
-          });
+        document.getElementById('cancelPostBtn').addEventListener('click', () => {
+          composerInput.value = '';
+          composerInput.rows = 1;
+          composerActions.classList.remove('show');
+          composerInput.blur();
+        });
+
+        document.getElementById('postBtn').addEventListener('click', createPost);
+        
+        composerInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+            createPost();
+          }
         });
       }
 
-      // 編輯和刪除按鈕 (兩種模式都有)
+      // 根據模式綁定不同事件
+      if (state.viewMode === 'list') {
+        bindListModeEvents();
+      } else if (state.viewMode === 'grid') {
+        bindGridModeEvents();
+      } else if (state.viewMode === 'category') {
+        bindCategoryModeEvents();
+      } else if (state.viewMode === 'flow') {
+        bindFlowModeEvents();
+      }
+
+      // 通用 Modal 事件
+      bindModalEvents();
+    }
+
+    // 列表模式事件
+    function bindListModeEvents() {
       document.querySelectorAll('.post-action-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
-          e.stopPropagation(); // 防止觸發卡片點擊
-          const action = btn.dataset.action;
-          const id = btn.dataset.id;
+          handlePostAction(btn.dataset.action, btn.dataset.id);
+        });
+      });
+    }
 
-          if (action === 'delete') {
-            if (confirm('確定要刪除這則想法嗎？')) {
-              state.posts = state.posts.filter(p => p.id !== id);
+    // 網格模式事件
+    function bindGridModeEvents() {
+      document.querySelectorAll('.post-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('.post-action-btn')) return;
+          const id = card.dataset.postId;
+          state.viewingPost = state.posts.find(p => p.id === id);
+          render();
+        });
+      });
+
+      document.querySelectorAll('.post-action-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          handlePostAction(btn.dataset.action, btn.dataset.id);
+        });
+      });
+    }
+
+    // 分類模式事件
+    function bindCategoryModeEvents() {
+      let draggedCard = null;
+      let draggedPostId = null;
+
+      // 卡片拖曳
+      document.querySelectorAll('.category-card').forEach(card => {
+        card.addEventListener('dragstart', (e) => {
+          draggedCard = card;
+          draggedPostId = card.dataset.postId;
+          card.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+        });
+
+        card.addEventListener('dragend', () => {
+          if (draggedCard) draggedCard.classList.remove('dragging');
+          draggedCard = null;
+          draggedPostId = null;
+          document.querySelectorAll('.category-column').forEach(col => col.classList.remove('drag-over'));
+        });
+
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('.post-action-btn')) return;
+          const id = card.dataset.postId;
+          state.viewingPost = state.posts.find(p => p.id === id);
+          render();
+        });
+      });
+
+      // 分類欄接收拖曳
+      document.querySelectorAll('.category-cards').forEach(column => {
+        column.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          column.closest('.category-column').classList.add('drag-over');
+        });
+
+        column.addEventListener('dragleave', (e) => {
+          if (!column.contains(e.relatedTarget)) {
+            column.closest('.category-column').classList.remove('drag-over');
+          }
+        });
+
+        column.addEventListener('drop', (e) => {
+          e.preventDefault();
+          const categoryId = column.dataset.categoryId;
+          
+          if (draggedPostId) {
+            const postIndex = state.posts.findIndex(p => p.id === draggedPostId);
+            if (postIndex !== -1) {
+              state.posts[postIndex].categoryId = categoryId === 'uncategorized' ? null : categoryId;
+              state.posts[postIndex].categoryOrder = Date.now(); // 簡單排序
               storage.setPosts(state.posts);
               render();
             }
-          } else if (action === 'edit') {
-            state.editingPost = state.posts.find(p => p.id === id);
+          }
+        });
+      });
+
+      // 編輯刪除按鈕
+      document.querySelectorAll('.post-action-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          handlePostAction(btn.dataset.action, btn.dataset.id);
+        });
+      });
+
+      // 新增分類
+      document.getElementById('addCategoryBtn')?.addEventListener('click', () => {
+        const name = prompt('輸入分類名稱：');
+        if (name && name.trim()) {
+          const newCategory = {
+            id: generateId(),
+            projectId: state.currentProject.id,
+            name: name.trim(),
+            color: CATEGORY_COLORS[state.categories.length % CATEGORY_COLORS.length],
+            order: state.categories.length,
+          };
+          state.categories.push(newCategory);
+          storage.setCategories(state.categories);
+          render();
+        }
+      });
+
+      // 分類選單按鈕
+      document.querySelectorAll('.category-menu-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const categoryId = btn.dataset.categoryId;
+          const action = prompt('輸入操作：rename（重命名）、delete（刪除）');
+          
+          if (action === 'rename') {
+            const newName = prompt('新名稱：');
+            if (newName && newName.trim()) {
+              const catIndex = state.categories.findIndex(c => c.id === categoryId);
+              if (catIndex !== -1) {
+                state.categories[catIndex].name = newName.trim();
+                storage.setCategories(state.categories);
+                render();
+              }
+            }
+          } else if (action === 'delete') {
+            if (confirm('確定刪除此分類？卡片會移到未分類')) {
+              // 把該分類的卡片移到未分類
+              state.posts.forEach(p => {
+                if (p.categoryId === categoryId) p.categoryId = null;
+              });
+              storage.setPosts(state.posts);
+              
+              state.categories = state.categories.filter(c => c.id !== categoryId);
+              storage.setCategories(state.categories);
+              render();
+            }
+          }
+        });
+      });
+    }
+
+    // 流程模式事件
+    function bindFlowModeEvents() {
+      const flowContainer = document.getElementById('flowContainer');
+      const flowCanvas = document.getElementById('flowCanvas');
+      if (!flowContainer || !flowCanvas) return;
+
+      let isDraggingNode = false;
+      let draggedNodeId = null;
+      let dragOffset = { x: 0, y: 0 };
+      let isDrawingLine = false;
+      let lineStartId = null;
+
+      // 縮放控制
+      document.getElementById('flowZoomIn')?.addEventListener('click', () => {
+        state.flowScale = Math.min(2, state.flowScale + 0.1);
+        render();
+      });
+
+      document.getElementById('flowZoomOut')?.addEventListener('click', () => {
+        state.flowScale = Math.max(0.3, state.flowScale - 0.1);
+        render();
+      });
+
+      document.getElementById('flowReset')?.addEventListener('click', () => {
+        state.flowScale = 1;
+        state.flowOffset = { x: 0, y: 0 };
+        render();
+      });
+
+      // 節點拖曳
+      document.querySelectorAll('.flow-node').forEach(node => {
+        node.addEventListener('mousedown', (e) => {
+          if (e.target.classList.contains('flow-node-connector')) return;
+          
+          isDraggingNode = true;
+          draggedNodeId = node.dataset.postId;
+          const rect = node.getBoundingClientRect();
+          dragOffset = {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+          };
+          node.classList.add('dragging');
+          e.preventDefault();
+        });
+
+        node.addEventListener('click', (e) => {
+          if (e.target.classList.contains('flow-node-connector')) return;
+          const id = node.dataset.postId;
+          state.viewingPost = state.posts.find(p => p.id === id);
+          render();
+        });
+      });
+
+      // 連接點拖曳 (建立連線)
+      document.querySelectorAll('.flow-node-connector.out').forEach(connector => {
+        connector.addEventListener('mousedown', (e) => {
+          e.stopPropagation();
+          isDrawingLine = true;
+          lineStartId = connector.dataset.postId;
+        });
+      });
+
+      // 連接點放開 (完成連線)
+      document.querySelectorAll('.flow-node-connector.in').forEach(connector => {
+        connector.addEventListener('mouseup', (e) => {
+          if (isDrawingLine && lineStartId) {
+            const toId = connector.dataset.postId;
+            if (lineStartId !== toId) {
+              const fromPost = state.posts.find(p => p.id === lineStartId);
+              if (fromPost) {
+                if (!fromPost.flowConnections) fromPost.flowConnections = [];
+                if (!fromPost.flowConnections.includes(toId)) {
+                  fromPost.flowConnections.push(toId);
+                  storage.setPosts(state.posts);
+                  render();
+                }
+              }
+            }
+          }
+          isDrawingLine = false;
+          lineStartId = null;
+        });
+      });
+
+      // 全域滑鼠移動和放開
+      document.addEventListener('mousemove', (e) => {
+        if (isDraggingNode && draggedNodeId) {
+          const canvasRect = flowCanvas.getBoundingClientRect();
+          const x = (e.clientX - canvasRect.left) / state.flowScale - dragOffset.x;
+          const y = (e.clientY - canvasRect.top) / state.flowScale - dragOffset.y;
+          
+          const postIndex = state.posts.findIndex(p => p.id === draggedNodeId);
+          if (postIndex !== -1) {
+            state.posts[postIndex].flowX = Math.max(0, x);
+            state.posts[postIndex].flowY = Math.max(0, y);
+            
+            // 即時更新位置
+            const nodeEl = document.querySelector(`.flow-node[data-post-id="${draggedNodeId}"]`);
+            if (nodeEl) {
+              nodeEl.style.left = `${Math.max(0, x)}px`;
+              nodeEl.style.top = `${Math.max(0, y)}px`;
+            }
+          }
+        }
+      });
+
+      document.addEventListener('mouseup', () => {
+        if (isDraggingNode) {
+          storage.setPosts(state.posts);
+          document.querySelectorAll('.flow-node').forEach(n => n.classList.remove('dragging'));
+          render(); // 重繪連線
+        }
+        isDraggingNode = false;
+        draggedNodeId = null;
+        isDrawingLine = false;
+        lineStartId = null;
+      });
+
+      // 刪除連線
+      document.querySelectorAll('.flow-connections line').forEach(line => {
+        line.addEventListener('click', () => {
+          const fromId = line.dataset.from;
+          const toId = line.dataset.to;
+          const fromPost = state.posts.find(p => p.id === fromId);
+          if (fromPost && fromPost.flowConnections) {
+            fromPost.flowConnections = fromPost.flowConnections.filter(id => id !== toId);
+            storage.setPosts(state.posts);
             render();
           }
         });
       });
 
-      // 查看 Modal 事件
+      // 底部卡片拖曳到畫布
+      document.querySelectorAll('.flow-unassigned-card').forEach(card => {
+        card.addEventListener('dragstart', (e) => {
+          e.dataTransfer.setData('postId', card.dataset.postId);
+          e.dataTransfer.effectAllowed = 'move';
+        });
+      });
+
+      flowCanvas.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+      });
+
+      flowCanvas.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const postId = e.dataTransfer.getData('postId');
+        if (postId) {
+          const canvasRect = flowCanvas.getBoundingClientRect();
+          const x = (e.clientX - canvasRect.left) / state.flowScale;
+          const y = (e.clientY - canvasRect.top) / state.flowScale;
+          
+          const postIndex = state.posts.findIndex(p => p.id === postId);
+          if (postIndex !== -1) {
+            state.posts[postIndex].flowX = Math.max(0, x - 80);
+            state.posts[postIndex].flowY = Math.max(0, y - 40);
+            state.posts[postIndex].flowConnections = [];
+            storage.setPosts(state.posts);
+            render();
+          }
+        }
+      });
+    }
+
+    // 通用 Modal 事件
+    function bindModalEvents() {
+      // 查看 Modal
       if (state.viewingPost) {
         const viewModal = document.getElementById('viewModal');
-
-        document.getElementById('viewCloseBtn').addEventListener('click', () => {
+        document.getElementById('viewCloseBtn')?.addEventListener('click', () => {
           state.viewingPost = null;
           render();
         });
-
-        document.getElementById('viewEditBtn').addEventListener('click', () => {
+        document.getElementById('viewEditBtn')?.addEventListener('click', () => {
           state.editingPost = state.viewingPost;
           state.viewingPost = null;
           render();
         });
-
-        // 點擊 overlay 關閉
-        viewModal.addEventListener('click', (e) => {
+        viewModal?.addEventListener('click', (e) => {
           if (e.target.id === 'viewModal') {
             state.viewingPost = null;
             render();
@@ -1350,17 +2220,17 @@
         });
       }
 
-      // 編輯 Modal 事件
+      // 編輯 Modal
       if (state.editingPost) {
         const editModal = document.getElementById('editModal');
         const editTextarea = document.getElementById('editTextarea');
 
-        document.getElementById('cancelEditBtn').addEventListener('click', () => {
+        document.getElementById('cancelEditBtn')?.addEventListener('click', () => {
           state.editingPost = null;
           render();
         });
 
-        document.getElementById('deleteInModalBtn').addEventListener('click', () => {
+        document.getElementById('deleteInModalBtn')?.addEventListener('click', () => {
           if (confirm('確定要刪除這則想法嗎？')) {
             state.posts = state.posts.filter(p => p.id !== state.editingPost.id);
             storage.setPosts(state.posts);
@@ -1369,7 +2239,7 @@
           }
         });
 
-        document.getElementById('saveEditBtn').addEventListener('click', () => {
+        document.getElementById('saveEditBtn')?.addEventListener('click', () => {
           const newText = editTextarea.value.trim();
           if (newText) {
             const postIndex = state.posts.findIndex(p => p.id === state.editingPost.id);
@@ -1383,24 +2253,35 @@
           render();
         });
 
-        // 點擊 overlay 關閉
-        editModal.addEventListener('click', (e) => {
+        editModal?.addEventListener('click', (e) => {
           if (e.target.id === 'editModal') {
             state.editingPost = null;
             render();
           }
         });
 
-        // Ctrl/Cmd + Enter 儲存
-        editTextarea.addEventListener('keydown', (e) => {
+        editTextarea?.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
             document.getElementById('saveEditBtn').click();
           }
         });
 
-        // 自動 focus
-        editTextarea.focus();
-        editTextarea.setSelectionRange(editTextarea.value.length, editTextarea.value.length);
+        editTextarea?.focus();
+        editTextarea?.setSelectionRange(editTextarea.value.length, editTextarea.value.length);
+      }
+    }
+
+    // 處理貼文操作
+    function handlePostAction(action, id) {
+      if (action === 'delete') {
+        if (confirm('確定要刪除這則想法嗎？')) {
+          state.posts = state.posts.filter(p => p.id !== id);
+          storage.setPosts(state.posts);
+          render();
+        }
+      } else if (action === 'edit') {
+        state.editingPost = state.posts.find(p => p.id === id);
+        render();
       }
     }
 
