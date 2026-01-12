@@ -1726,11 +1726,53 @@
       return linkify(escaped);
     }
 
+    // ============================================================
     // 初始化
-    function init() {
-      state.projects = storage.getProjects();
-      state.posts = storage.getPosts();
-      state.categories = storage.getCategories();
+    // 啟動時優先從伺服器載入最新備份，若失敗則使用 localStorage
+    // ============================================================
+    async function init() {
+      // 先顯示載入中畫面
+      document.getElementById('app').innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; gap: 16px;">
+          <div style="font-size: 2rem;">Loading...</div>
+          <div style="color: var(--color-text-secondary);">正在載入資料...</div>
+        </div>
+      `;
+
+      try {
+        // 嘗試從伺服器載入最新備份
+        const response = await fetch('/api/backup/latest');
+        const result = await response.json();
+
+        if (result.success && result.data) {
+          // 伺服器有備份資料，使用它
+          const data = result.data;
+          state.projects = data.projects || [];
+          state.posts = data.posts || [];
+          state.categories = data.categories || [];
+
+          // 同步到 localStorage（作為離線備用）
+          storage.setProjects(state.projects);
+          storage.setPosts(state.posts);
+          storage.setCategories(state.categories);
+
+          console.log(`[Init] Loaded from server backup: ${result.filename}`);
+          console.log(`[Init] ${state.projects.length} projects, ${state.posts.length} posts`);
+        } else {
+          // 伺服器沒有備份，使用 localStorage
+          state.projects = storage.getProjects();
+          state.posts = storage.getPosts();
+          state.categories = storage.getCategories();
+          console.log('[Init] No server backup, using localStorage');
+        }
+      } catch (error) {
+        // 伺服器無法連線，使用 localStorage
+        state.projects = storage.getProjects();
+        state.posts = storage.getPosts();
+        state.categories = storage.getCategories();
+        console.log('[Init] Server unavailable, using localStorage:', error.message);
+      }
+
       render();
     }
 

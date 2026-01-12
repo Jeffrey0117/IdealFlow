@@ -1,3 +1,29 @@
+/**
+ * Idea Flow Server
+ * ================
+ *
+ * 這是 Idea Flow 的主要伺服器，提供以下功能：
+ *
+ * 1. 靜態檔案服務 - 提供 index.html 和其他前端資源
+ * 2. 自動備份系統 - 前端每次資料變更時會自動備份到 ./backups/
+ * 3. 備份還原 API - 啟動時前端會自動載入最新備份
+ *
+ * 啟動方式：
+ *   node server.js
+ *
+ * 然後開啟瀏覽器訪問：
+ *   http://localhost:3000
+ *
+ * 備份檔案位置：
+ *   ./backups/backup-YYYY-MM-DDTHH-MM-SS.json
+ *
+ * API 端點：
+ *   POST /api/backup          - 儲存新備份
+ *   GET  /api/backups         - 取得所有備份列表
+ *   GET  /api/backup/latest   - 取得最新備份（啟動時自動載入用）
+ *   GET  /api/backup/:filename - 取得特定備份
+ */
+
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -15,7 +41,10 @@ if (!fs.existsSync(BACKUPS_DIR)) {
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static(__dirname));
 
-// 自動備份 API
+// ============================================================
+// API: 儲存備份
+// 前端每次資料變更後會呼叫此 API 自動備份
+// ============================================================
 app.post('/api/backup', (req, res) => {
   try {
     const data = req.body;
@@ -36,7 +65,9 @@ app.post('/api/backup', (req, res) => {
   }
 });
 
-// 取得備份列表 API
+// ============================================================
+// API: 取得備份列表
+// ============================================================
 app.get('/api/backups', (req, res) => {
   try {
     const files = fs.readdirSync(BACKUPS_DIR)
@@ -57,9 +88,51 @@ app.get('/api/backups', (req, res) => {
   }
 });
 
-// 讀取特定備份 API
+// ============================================================
+// API: 取得最新備份
+// 前端啟動時會呼叫此 API，自動載入最新備份資料
+// ============================================================
+app.get('/api/backup/latest', (req, res) => {
+  try {
+    const files = fs.readdirSync(BACKUPS_DIR)
+      .filter(f => f.endsWith('.json'))
+      .map(f => ({
+        name: f,
+        time: fs.statSync(path.join(BACKUPS_DIR, f)).mtime.getTime()
+      }))
+      .sort((a, b) => b.time - a.time);
+
+    if (files.length === 0) {
+      return res.json({ success: true, data: null, message: 'No backups found' });
+    }
+
+    const latestFile = files[0];
+    const filepath = path.join(BACKUPS_DIR, latestFile.name);
+    const data = JSON.parse(fs.readFileSync(filepath, 'utf8'));
+
+    console.log(`[Backup] Loaded latest: ${latestFile.name}`);
+    res.json({
+      success: true,
+      data,
+      filename: latestFile.name,
+      backupTime: new Date(latestFile.time).toISOString()
+    });
+  } catch (error) {
+    console.error('[Backup] Error loading latest:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// ============================================================
+// API: 取得特定備份
+// ============================================================
 app.get('/api/backup/:filename', (req, res) => {
   try {
+    // 防止 /api/backup/latest 被這個 route 攔截
+    if (req.params.filename === 'latest') {
+      return; // 已由上面的 route 處理
+    }
+
     const filepath = path.join(BACKUPS_DIR, req.params.filename);
     if (!fs.existsSync(filepath)) {
       return res.status(404).json({ success: false, error: 'Backup not found' });
@@ -71,7 +144,9 @@ app.get('/api/backup/:filename', (req, res) => {
   }
 });
 
-// 清理舊備份
+// ============================================================
+// 清理舊備份，只保留指定數量
+// ============================================================
 function cleanOldBackups(keepCount) {
   const files = fs.readdirSync(BACKUPS_DIR)
     .filter(f => f.endsWith('.json'))
@@ -89,12 +164,23 @@ function cleanOldBackups(keepCount) {
   }
 }
 
+// ============================================================
+// 啟動伺服器
+// ============================================================
 app.listen(PORT, () => {
   console.log(`
-╔═══════════════════════════════════════════════╗
-║   Idea Flow Server Running                    ║
-║   http://localhost:${PORT}                      ║
-║   Backups: ./backups/                         ║
-╚═══════════════════════════════════════════════╝
+╔═══════════════════════════════════════════════════════════╗
+║                                                           ║
+║   Idea Flow Server                                        ║
+║                                                           ║
+║   URL:     http://localhost:${PORT}                         ║
+║   Backups: ./backups/                                     ║
+║                                                           ║
+║   功能：                                                  ║
+║   - 靜態檔案服務                                          ║
+║   - 自動備份（每次資料變更）                              ║
+║   - 啟動時自動載入最新備份                                ║
+║                                                           ║
+╚═══════════════════════════════════════════════════════════╝
   `);
 });
